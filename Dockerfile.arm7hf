@@ -24,7 +24,6 @@ RUN chmod +x /entrypoint.sh && mkdir /entrypoint.d && mkdir /run/php/ -p && chow
 ADD etc/entrypoint.d /entrypoint.d
 RUN [ "cross-build-end" ]
 
-VOLUME ["/var/www/html"]
 EXPOSE 80
 EXPOSE 9000
 

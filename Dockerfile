@@ -19,7 +19,6 @@ ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh && mkdir /entrypoint.d && mkdir /run/php/ -p && chown www-data:www-data /run/php
 ADD etc/entrypoint.d /entrypoint.d
 
-VOLUME ["/var/www/html"]
 EXPOSE 80
 EXPOSE 9000
 
