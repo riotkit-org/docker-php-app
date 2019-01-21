@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
