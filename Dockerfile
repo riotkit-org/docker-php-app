@@ -25,4 +25,7 @@ ADD etc/entrypoint.d /entrypoint.d
 EXPOSE 80
 EXPOSE 9000
 
+HEALTHCHECK --interval=5m --timeout=4s \
+  CMD curl -f http://localhost/ || exit 1
+
 ENTRYPOINT /entrypoint.sh
