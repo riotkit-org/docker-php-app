@@ -8,10 +8,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && usermod -u 1000 www-data \
     && groupmod -g 1000 www-data \
     && apt-get update \
-    && apt-get install -y cron supervisor rsyslog git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev \
+    && apt-get install -y cron supervisor rsyslog git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev \
     && docker-php-ext-install pdo_mysql pdo_sqlite pcntl calendar phar mysqli gd pdo xml \
     && docker-php-ext-enable opcache \
-    && apt-get remove -y libssl-dev libxml2-dev \
+    && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev \
     && apt-get autoremove -y \
     && apt-get clean
 
