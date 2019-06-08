@@ -30,6 +30,7 @@ help:
 ## Build x86_64 image
 build@x86_64:
 	sudo docker build . -f ./Dockerfile -t wolnosciowiec/docker-php-app
+	sudo docker tag wolnosciowiec/docker-php-app quay.io/riotkit/php-app
 
 ## Build arm7hf image
 build@arm7hf:
