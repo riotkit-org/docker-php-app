@@ -35,6 +35,7 @@ build@x86_64:
 ## Build arm7hf image
 build@arm7hf:
 	sudo docker build . -f ./Dockerfile.arm7hf -t wolnosciowiec/docker-php-app:arm7hf
+	sudo docker tag wolnosciowiec/docker-php-app:arm7hf quay.io/riotkit/php-app-arm
 
 ## Push x86_64 image to registry
 push@x86_64:

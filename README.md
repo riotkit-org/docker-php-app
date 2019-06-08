@@ -1,11 +1,28 @@
 PHP application container
 =========================
 
+[![Docker Repository on Quay](https://quay.io/repository/riotkit/php-app/status "Docker Repository on Quay")](https://quay.io/repository/riotkit/php-app)
+[![Docker Repository on Quay](https://quay.io/repository/riotkit/php-app-armhf/status "Docker Repository on Quay")](https://quay.io/repository/riotkit/php-app-armhf)
+
 Microservice container pre-configured to work with Symfony 3.x/4.x that contains:
 - Nginx
 - PHP 7.3+ (with: pdo_mysql, pdo_sqlite, pcntl, calendar, phar, mysqli, gd, pdo, xml, opcache)
 - Cron
 - Supervisor
+
+## Ready to use images
+
+```bash
+docker pull quay.io/riotkit/php-app-armhf
+docker pull quay.io/riotkit/php-app
+```
+
+## Building
+
+```bash
+make build@x86_64
+make build@arm7hf
+```
 
 ## Customizing
 
