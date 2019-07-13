@@ -1,34 +1,34 @@
 user www-data;
 daemon off;
-worker_processes 4;
+worker_processes {{ NGINX_WORKER_PROCESSES }};
 pid /var/run/nginx.pid;
 
 events {
-    worker_connections 1024;
+    worker_connections {{ NGINX_WORKER_CONNECTIONS }};
     # multi_accept on;
 }
 
 http {
-    sendfile on;
-    tcp_nopush on;
-    tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 4096;
-    client_max_body_size 200000M;
+    sendfile {{ NGINX_SENDFILE }};
+    tcp_nopush {{ NGINX_TCP_NOPUSH }};
+    tcp_nodelay {{ NGINX_TCP_NODELAY }};
+    keepalive_timeout {{ NGINX_KEEPALIVE_TIMEOUT }};
+    types_hash_max_size {{ NGINX_TYPES_HASH_MAX_SIZE }};
+    client_max_body_size {{ NGINX_CLIENT_MAX_BODY_SIZE }};
     server_tokens off;
 
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-    fastcgi_temp_file_write_size 20m;
-    fastcgi_busy_buffers_size 786k;
-    fastcgi_buffer_size 512k;
-    fastcgi_buffers 16 512k;
+    fastcgi_temp_file_write_size {{ NGINX_FCGI_TEMP_WRITE_SIZE }};
+    fastcgi_busy_buffers_size {{ NGINX_FCGI_BUSY_BUFF_SIZE }};
+    fastcgi_buffer_size {{ NGINX_FCGI_BUFF_SIZE }};
+    fastcgi_buffers {{ NGINX_FCGI_BUFFERS }};
 
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
+    access_log /dev/stdout;
+    error_log /dev/stderr;
 
-    gzip on;
+    gzip {{ NGINX_GZIP }};
     gzip_disable "msie6";
 
     server {
@@ -36,8 +36,8 @@ http {
         listen [::]:80 default_server;
         set $root_dir '';
 
-        if (-d /var/www/html/public) {
-            set $root_dir 'public';
+        if (-d /var/www/html/{{ NGINX_ROOT_DIR }}) {
+            set $root_dir '{{ NGINX_ROOT_DIR }}';
         }
 
         if (-d /var/www/html/web) {
@@ -52,9 +52,11 @@ http {
             try_files $uri /index.php$is_args$args;
         }
 
+        include /etc/nginx/conf.d/*.conf;
+
         location ~ ^/index\.php(/|$) {
             fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
-            fastcgi_param  SERVER_SOFTWARE    Wolnosciowiec-Docker-Container;
+            fastcgi_param  SERVER_SOFTWARE    RiotKit-Docker-Container;
             fastcgi_param  QUERY_STRING       $query_string;
             fastcgi_param  REQUEST_METHOD     $request_method;
             fastcgi_param  CONTENT_TYPE       $content_type;

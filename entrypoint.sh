@@ -1,4 +1,7 @@
 #!/bin/bash
+
+/prepare-configs.sh
+
 for file_name in /entrypoint.d/*sh
 do
     if [ -e "${file_name}" ]; then

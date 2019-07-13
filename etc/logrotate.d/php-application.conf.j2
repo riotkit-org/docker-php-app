@@ -1,0 +1,15 @@
+{% if ROTATE_ENABLED|lower() == 'true' %}
+
+{{ ROTATE_PATH|default('/var/www/html/var/log/*.log') }} {
+  {{ ROTATE_HOW_OFTEN|default('daily') }}
+  size {{ ROTATE_SIZE|default('250k') }}
+  rotate {{ ROTATE_COUNT|default('3') }}
+
+  compress
+  copytruncate
+  missingok
+  notifempty
+  maxage {{ ROTATE_MAX_AGE|default('5') }}
+  minsize {{ ROTATE_MIN_SIZE|default('5k') }}
+}
+{% endif %}
