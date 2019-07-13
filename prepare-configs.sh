@@ -23,4 +23,4 @@ echo " >> Restoring NGINX config from backup if there was any"
 [[ -f /etc/nginx/nginx.conf.bak ]] && mv /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf
 
 echo " >> Testing NGINX configuration"
-nginx -t
+nginx -t -c ${CONFIGS_DEST_PATH}/nginx/nginx.conf
