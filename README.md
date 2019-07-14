@@ -10,6 +10,7 @@ Microservice container pre-configured to work with Symfony 3.x/4.x that contains
 - Cron
 - Supervisor
 - Logrotate
+- Gitver (https://github.com/manuelbua/gitver)
 
 ## Ready to use images
 
