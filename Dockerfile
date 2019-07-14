@@ -39,7 +39,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     \
     && docker-php-ext-install pdo_mysql pdo_sqlite pcntl calendar phar mysqli gd pdo xml \
     && docker-php-ext-enable opcache \
-    && pip install j2cli setuptools wheel gitver \
+    && pip install setuptools \
+    && pip install wheel \
+    && pip install j2cli \
+    && pip install gitver \
     && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev \
     && apt-get autoremove -y \
     && apt-get clean \
