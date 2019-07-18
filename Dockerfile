@@ -24,7 +24,17 @@ ENV ROTATE_ENABLED=true \
     NGINX_FCGI_BUFFERS="16 512k" \
     SUPERVISOR_LOG_LEVEL=debug \
     SUPERVISOR_LOG_BACKUPS=2 \
-    SUPERVISOR_LOG_MAXBYTES=5MB
+    SUPERVISOR_LOG_MAXBYTES=5MB \
+    PHP_MEMORY_LIMIT=128M \
+    PHP_ERROR_REPORTING="E_ALL & ~E_DEPRECATED & ~E_STRICT" \
+    PHP_DISPLAY_ERRORS=Off \
+    PHP_HTML_ERRORS=On \
+    PHP_UPLOAD_MAX_FILESIZE=2M \
+    PHP_POST_MAX_SIZE=8M \
+    PHP_MAX_FILE_UPLOADS=20 \
+    PHP_MAX_EXECUTION_TIME=30 \
+    PHP_MAX_INPUT_TIME=60
+
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
