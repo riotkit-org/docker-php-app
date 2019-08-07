@@ -1,6 +1,7 @@
 #!/bin/bash
 
-/prepare-configs.sh
+/prepare-etc.sh
+/prepare-usr.sh
 
 for file_name in /entrypoint.d/*sh
 do

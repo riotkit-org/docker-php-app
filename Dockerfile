@@ -59,8 +59,9 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && rm /etc/nginx/nginx.conf || true
 
 COPY etc /.etc.template
+COPY usr /.usr.template
 ADD *.sh /
-RUN chmod +x /entrypoint.sh \
+RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.sh \
     && mkdir /entrypoint.d -p \
     && mkdir /run/php/ -p \
     && chown www-data:www-data /run/php \
@@ -71,7 +72,8 @@ RUN chmod +x /entrypoint.sh \
     && echo ">> Performing a self-test of example ENV values" \
     && cp -pr /.etc.template /.etc.test \
     && mkdir -p /.etc.test.dest \
-    && CONFIGS_PATH=/.etc.test CONFIGS_DEST_PATH=/.etc.test.dest /prepare-configs.sh \
+    && CONFIGS_PATH=/.etc.test CONFIGS_DEST_PATH=/.etc.test.dest /prepare-etc.sh \
+    && /prepare-usr.sh \
     && rm -rf /.etc.test /.etc.test.dest
 
 ADD etc/entrypoint.d /entrypoint.d
