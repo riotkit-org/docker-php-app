@@ -18,6 +18,3 @@ echo " >> Restoring NGINX config from backup if there was any"
 
 echo " >> Testing NGINX configuration"
 nginx -t -c ${CONFIGS_DEST_PATH}/nginx/nginx.conf
-
-echo " >> Testing PHP configuration"
-php -v
