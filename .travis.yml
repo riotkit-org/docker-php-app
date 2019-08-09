@@ -3,7 +3,7 @@ services:
     - docker
 
 before_script:
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin hub.docker.com
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "$QUAY_PASSWORD" | docker login -u "QUAY_USERNAME" --password-stdin quay.io
 
 script:
