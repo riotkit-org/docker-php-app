@@ -44,6 +44,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && usermod -u 1000 www-data \
     && groupmod -g 1000 www-data \
     && apt-get update \
+    && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y cron supervisor \
         git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev python-pip \
     \
