@@ -1,10 +1,11 @@
-language: ruby
+language: python
 services:
     - docker
 
 before_script:
+    - sudo pip install j2cli
     - echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
-    - make build_all_parallel push_all_parallel
+    - make build_all push_all_parallel
