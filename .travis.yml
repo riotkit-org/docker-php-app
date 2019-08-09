@@ -4,7 +4,7 @@ services:
 
 before_script:
     - echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
-    - echo "$QUAY_PASSWORD" | sudo docker login -u "QUAY_USERNAME" --password-stdin quay.io
+    - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
     - make build_all_parallel push_all_parallel
