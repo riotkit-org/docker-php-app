@@ -36,7 +36,8 @@ ENV ROTATE_ENABLED=true \
     PHP_MAX_INPUT_TIME=60
 
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+RUN set -x \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && mv composer.phar /usr/bin/composer \
     && rm composer-setup.php \
@@ -48,7 +49,15 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && apt-get install --no-install-recommends -y cron supervisor \
         git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev python-pip \
     \
-    && docker-php-ext-install pdo_mysql pdo_sqlite pcntl calendar phar mysqli gd pdo xml \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install pdo_sqlite \
+    && docker-php-ext-install pcntl \
+    && docker-php-ext-install calendar \
+    && docker-php-ext-install phar \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install pdo \
+    && docker-php-ext-install xml \
     && docker-php-ext-enable opcache \
     && pip install setuptools \
     && pip install wheel \
