@@ -86,6 +86,11 @@ RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.
     && CONFIGS_PATH=/.etc.test CONFIGS_DEST_PATH=/.etc.test.dest /prepare-etc.sh \
     && /prepare-usr.sh \
     && rm -rf /.etc.test /.etc.test.dest
+    \
+    && set -x \
+    && command -v php \
+    && command -v php-fpm \
+    && command -v nginx
 
 ADD etc/entrypoint.d /entrypoint.d
 
