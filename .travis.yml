@@ -8,4 +8,7 @@ before_script:
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
-    - make build_all_parallel push_all_parallel SLACK_URL=$SLACK_URL
+    - make build_all push_all_parallel SLACK_URL=$SLACK_URL
+
+after_failure:
+    - ./notify.sh "${SLACK_URL}" "Build failure."

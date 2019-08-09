@@ -18,19 +18,22 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	${SUDO} docker push wolnosciowiec/docker-php-app:${VERSION}-${ARCH}
 	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}
 
-	[[ "${SLACK_URL}" ]] && echo "{\"text\": \"Released php-app:${VERSION}-${ARCH} to the docker registry\"}" | curl -H 'Content-type: application/json' -d @- -X POST -s ${SLACK_URL};
+	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
 
-build_all: build_55_x86_64 build_73_x86_64 build_72_x86_64 build_72_arm32v7 build_73_arm32v7 ## Build all versions
+build_all: build_54_x86_64 build_55_x86_64 build_73_x86_64 build_72_x86_64 build_72_arm32v7 build_73_arm32v7 ## Build all versions
 
 build_all_parallel: ## Build everything parallel
 	make build_all -j$$(nproc)
 
-push_all: push_55_x86_64 push_72_x86_64 push_73_x86_64 push_72_arm32v7 push_73_arm32v7 ## Push all versions
+push_all: push_54_x86_64 push_55_x86_64 push_72_x86_64 push_73_x86_64 push_72_arm32v7 push_73_arm32v7 ## Push all versions
 
 push_all_parallel: ## Push all versions parallel
 	make push_all -j$$(nproc)
 
 ## BUILD
+
+build_54_x86_64: ## -
+	make build VERSION=5.4 ARCH=x86_64
 
 build_55_x86_64: ## -
 	make build VERSION=5.5 ARCH=x86_64
@@ -48,6 +51,9 @@ build_73_arm32v7: ## -
 	make build VERSION=7.2 ARCH=arm32v7
 
 ## PUSH
+
+push_54_x86_64: ## -
+	make push VERSION=5.4 ARCH=x86_64
 
 push_55_x86_64: ## -
 	make push VERSION=5.5 ARCH=x86_64
