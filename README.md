@@ -60,3 +60,10 @@ You can also set *CRONTAB* environment variable to value ex. "*/5 * * * *   www-
 ## Environment variables
 
 See [Dockerfile](https://github.com/riotkit-org/docker-php-app/blob/master/Dockerfile) section "ENV" for variables and possible values.
+
+## NGINX Custom Config (like .htaccess)
+
+This feature allows to append a NGINX configuration from project directory.
+Files needs to be placed in ".nginx" directory.
+
+To enable this feature set environment variable `NGINX_ENABLE_CUSTOM_CONFIG=true`
