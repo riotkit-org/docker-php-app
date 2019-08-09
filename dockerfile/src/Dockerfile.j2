@@ -56,7 +56,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev \
     && apt-get autoremove -y \
     && apt-get clean \
-    && rm /etc/nginx/nginx.conf || true
+    && rm /etc/nginx/nginx.conf
 
 COPY etc /.etc.template
 COPY usr /.usr.template
