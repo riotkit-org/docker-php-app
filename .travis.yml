@@ -11,4 +11,4 @@ script:
     - make build_all push_all_parallel SLACK_URL=$SLACK_URL
 
 after_failure:
-    - ./notify.sh "${SLACK_URL}" "Build failure."
+    - ./notify.sh "${SLACK_URL}" "php-app container build failure."
