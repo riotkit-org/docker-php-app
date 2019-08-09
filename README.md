@@ -2,7 +2,6 @@ PHP application container
 =========================
 
 [![Docker Repository on Quay](https://quay.io/repository/riotkit/php-app/status "Docker Repository on Quay")](https://quay.io/repository/riotkit/php-app)
-[![Docker Repository on Quay](https://quay.io/repository/riotkit/php-app-armhf/status "Docker Repository on Quay")](https://quay.io/repository/riotkit/php-app-armhf)
 
 Microservice container pre-configured to work with Symfony 3.x/4.x that contains:
 - Nginx
@@ -15,15 +14,19 @@ Microservice container pre-configured to work with Symfony 3.x/4.x that contains
 ## Ready to use images
 
 ```bash
-docker pull quay.io/riotkit/php-app-armhf
-docker pull quay.io/riotkit/php-app
+docker pull quay.io/riotkit/php-app:7.3-arm32v7
+docker pull quay.io/riotkit/php-app:7.3
 ```
 
 ## Building
 
 ```bash
-make build@x86_64
-make build@arm7hf
+# see possible options
+make
+
+# examples
+make build_all
+make build_73_x86_64
 ```
 
 ## Customizing

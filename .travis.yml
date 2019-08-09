@@ -1,0 +1,10 @@
+language: php
+services:
+    - docker
+
+before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin hub.docker.com
+    - echo "$QUAY_PASSWORD" | docker login -u "QUAY_USERNAME" --password-stdin quay.io
+
+script:
+    - make build_all_parallel push_all_parallel

@@ -1,48 +1,62 @@
-#!make
+#!/usr/bin/env make
 
-#include .env
-#export $(shell sed 's/=.*//' .env)
-
+SUDO=sudo
+SHELL=/bin/bash
 .SILENT:
+.PHONY: help
 
-SHELL := /bin/bash
-
-## Colors
-COLOR_RESET   = \033[0m
-COLOR_INFO    = \033[32m
-COLOR_COMMENT = \033[33m
-
-## This help dialog
 help:
-	printf "${COLOR_COMMENT}Usage:${COLOR_RESET}\n"
-	printf " make [target]\n\n"
-	printf "${COLOR_COMMENT}Available targets:${COLOR_RESET}\n"
-	awk '/^[a-zA-Z\-\_0-9\.@]+:/ { \
-		helpMessage = match(lastLine, /^## (.*)/); \
-		if (helpMessage) { \
-			helpCommand = substr($$1, 0, index($$1, ":")); \
-			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
-			printf " ${COLOR_INFO}%-16s${COLOR_RESET} %s\n", helpCommand, helpMessage; \
-		} \
-	} \
-	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+	@grep -E '^[a-zA-Z\-\_0-9\.@]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-## Build x86_64 image
-build@x86_64:
-	sudo docker build . -f ./Dockerfile -t wolnosciowiec/docker-php-app
-	sudo docker tag wolnosciowiec/docker-php-app quay.io/riotkit/php-app
-	sudo docker tag wolnosciowiec/docker-php-app quay.io/riotkit/php-app:master
-	sudo docker tag wolnosciowiec/docker-php-app quay.io/riotkit/php-app:latest
+build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
+	cat ./dockerfile/src/versions/${ARCH}/${VERSION}-${ARCH}.json | j2 ./dockerfile/src/Dockerfile.j2 -f json  > ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile
+	${SUDO} docker build -t wolnosciowiec/docker-php-app:${VERSION}-${ARCH} -f ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile .
+	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:${VERSION}-${ARCH}
 
-## Build arm7hf image
-build@arm7hf:
-	sudo docker build . -f ./Dockerfile.arm7hf -t wolnosciowiec/docker-php-app:arm7hf
-	sudo docker tag wolnosciowiec/docker-php-app:arm7hf quay.io/riotkit/php-app-arm
+push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
+	${SUDO} docker push wolnosciowiec/docker-php-app:${VERSION}-${ARCH}
+	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}
 
-## Push x86_64 image to registry
-push@x86_64:
-	sudo docker push wolnosciowiec/docker-php-app
+build_all: build_56_x86_64 build_73_x86_64 build_72_x86_64 build_72_arm32v7 build_73_arm32v7 ## Build all versions
 
-## Push arm7hf image to registry
-push@arm7hf:
-	sudo docker push wolnosciowiec/docker-php-app:arm7hf
+build_all_parallel: ## Build everything parallel
+	make build_all -j$$(nproc)
+
+push_all: push_56_x86_64 push_72_x86_64 push_73_x86_64 push_72_arm32v7 push_73_arm32v7 ## Push all versions
+
+push_all_parallel: ## Push all versions parallel
+	make push_all -j$$(nproc)
+
+## BUILD
+
+build_56_x86_64: ## -
+	make build VERSION=5.6 ARCH=x86_64
+
+build_73_x86_64: ## -
+	make build VERSION=7.3 ARCH=x86_64
+
+build_72_x86_64: ## -
+	make build VERSION=7.2 ARCH=x86_64
+
+build_72_arm32v7: ## -
+	make build VERSION=7.3 ARCH=arm32v7
+
+build_73_arm32v7: ## -
+	make build VERSION=7.2 ARCH=arm32v7
+
+## PUSH
+
+push_56_x86_64: ## -
+	make push VERSION=5.6 ARCH=x86_64
+
+push_73_x86_64: ## -
+	make push VERSION=7.3 ARCH=x86_64
+
+push_72_x86_64: ## -
+	make push VERSION=7.2 ARCH=x86_64
+
+push_72_arm32v7: ## -
+	make push VERSION=7.3 ARCH=arm32v7
+
+push_73_arm32v7: ## -
+	make push VERSION=7.2 ARCH=arm32v7
