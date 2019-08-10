@@ -21,14 +21,15 @@ all: ## Build and push all versions
 				QEMU=false; \
 			fi; \
 			\
-			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU}; \
-			make push VERSION=$${VERSION} ARCH=$${ARCH}; \
+			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU} || ./notify.sh "${SLACK_URL}" "Failed to build php-app:$${VERSION}-$${ARCH}"; \
+			make push VERSION=$${VERSION} ARCH=$${ARCH} || ./notify.sh "${SLACK_URL}" "Failed to push php-app:$${VERSION}-$${ARCH}"; \
 		done \
 	done
 
 	make push_latest
 
 build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
+	exit 1
 	echo " >> Building ${VERSION} for ${ARCH}"
 	cat ./dockerfile/src/versions/${ARCH}/${VERSION}.json | j2 ./dockerfile/src/Dockerfile.j2 -f json  > ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile
 
