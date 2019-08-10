@@ -36,9 +36,21 @@ ENV ROTATE_ENABLED=true \
     PHP_MAX_INPUT_TIME=60 \
     NGINX_ENABLE_CUSTOM_CONFIG=false \
     PHP_INI_DIR=/usr/local/etc/php \
-    PHP_VERSION={{ VERSION }}
+    PHP_VERSION={{ VERSION }} \
+    NGINX_ENABLE_DEFAULT_LOCATION_INDEX=true
 
 RUN set -x \
+    \
+    # Install recent NGINX version
+    \
+    && echo "deb http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" > /etc/apt/sources.list.d/nginx.list \
+    && echo "deb-src http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" >> /etc/apt/sources.list.d/nginx.list \
+    && apt-get update \
+    && apt-get install -y gnupg2 \
+    && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
+    \
+    # Install PHP Composer (package manager)
+    \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && mv composer.phar /usr/bin/composer \
@@ -46,7 +58,6 @@ RUN set -x \
     && chmod +x /usr/bin/composer \
     && usermod -u 1000 www-data \
     && groupmod -g 1000 www-data \
-    && apt-get update \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y cron supervisor \
         git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev python-pip \

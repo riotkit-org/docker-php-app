@@ -1,4 +1,5 @@
 {
     "FROM": "php:7.3-fpm",
-    "VERSION": "7.3"
+    "VERSION": "7.3",
+    "DEBIAN_RELEASE": "buster"
 }
