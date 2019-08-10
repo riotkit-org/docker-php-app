@@ -20,12 +20,27 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 
 	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
 
+push_latest: ## Tag as latest, latest-stable and push
+	make _push_latest VERSION=7.3 ARCH=x86_64
+	make _push_latest VERSION=7.3 ARCH=arm32v7
+
+_push_latest:
+	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:latest
+	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:latest-stable
+	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} wolnosciowiec/docker-php-app:latest
+	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} wolnosciowiec/docker-php-app:latest-stable
+
+	${SUDO} docker push quay.io/riotkit/php-app:latest
+	${SUDO} docker push quay.io/riotkit/php-app:latest-stable
+	${SUDO} docker push wolnosciowiec/docker-php-app:latest
+	${SUDO} docker push wolnosciowiec/docker-php-app:latest-stable
+
 build_all: build_55_x86_64 build_73_x86_64 build_72_x86_64 build_72_arm32v7 build_73_arm32v7 ## Build all versions
 
 build_all_parallel: ## Build everything parallel
 	make build_all -j$$(nproc)
 
-push_all: push_55_x86_64 push_72_x86_64 push_73_x86_64 push_72_arm32v7 push_73_arm32v7 ## Push all versions
+push_all: push_55_x86_64 push_72_x86_64 push_73_x86_64 push_72_arm32v7 push_73_arm32v7 push_latest ## Push all versions
 
 push_all_parallel: ## Push all versions parallel
 	make push_all -j$$(nproc)
