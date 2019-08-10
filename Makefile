@@ -25,7 +25,7 @@ all: ## Build and push all versions
 			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU} || (./notify.sh "${SLACK_URL}" "Failed to build php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1); \
 			make push VERSION=$${VERSION} ARCH=$${ARCH} || (./notify.sh "${SLACK_URL}" "Failed to push php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1); \
 		done \
-	done \
+	done; \
 	\
 	exit $${EXIT_CODE};
 
