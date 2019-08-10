@@ -29,7 +29,6 @@ all: ## Build and push all versions
 	make push_latest
 
 build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
-	exit 1
 	echo " >> Building ${VERSION} for ${ARCH}"
 	cat ./dockerfile/src/versions/${ARCH}/${VERSION}.json | j2 ./dockerfile/src/Dockerfile.j2 -f json  > ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile
 
