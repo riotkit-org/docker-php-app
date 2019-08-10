@@ -45,10 +45,10 @@ RUN set -x \
     \
     && echo "deb http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" > /etc/apt/sources.list.d/nginx.list \
     && echo "deb-src http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" >> /etc/apt/sources.list.d/nginx.list \
-    && apt-get update \
+    && (apt-get update || true) \
     && apt-get install -y gnupg2 \
     && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
-    && apt-get update \
+    && (apt-get update || true) \
     \
     # Install PHP Composer (package manager)
     \
@@ -77,7 +77,7 @@ RUN set -x \
     && pip install wheel \
     && pip install j2cli \
     && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev \
+    && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev gcc g++ \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm /etc/nginx/nginx.conf
