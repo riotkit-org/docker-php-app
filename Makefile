@@ -11,6 +11,7 @@ help:
 	@grep -E '^[a-zA-Z\-\_0-9\.@]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 all: ## Build and push all versions
+	EXIT_CODE=0; \
 	for arch_path in $$(find ./dockerfile/src/versions/* -type d); do \
 		ARCH=$$(basename $${arch_path}); \
 		for file in $$(find $${arch_path}/*.json -type f); do \
@@ -21,10 +22,12 @@ all: ## Build and push all versions
 				QEMU=false; \
 			fi; \
 			\
-			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU} || ./notify.sh "${SLACK_URL}" "Failed to build php-app:$${VERSION}-$${ARCH}"; \
-			make push VERSION=$${VERSION} ARCH=$${ARCH} || ./notify.sh "${SLACK_URL}" "Failed to push php-app:$${VERSION}-$${ARCH}"; \
+			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU} || ./notify.sh "${SLACK_URL}" "Failed to build php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1; \
+			make push VERSION=$${VERSION} ARCH=$${ARCH} || ./notify.sh "${SLACK_URL}" "Failed to push php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1; \
 		done \
-	done
+	done \
+	\
+	exit ${EXIT_CODE};
 
 	make push_latest
 

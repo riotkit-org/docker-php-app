@@ -34,8 +34,8 @@ ENV ROTATE_ENABLED=true \
     PHP_MAX_FILE_UPLOADS=20 \
     PHP_MAX_EXECUTION_TIME=30 \
     PHP_MAX_INPUT_TIME=60 \
-    NGINX_ENABLE_CUSTOM_CONFIG=false
-
+    NGINX_ENABLE_CUSTOM_CONFIG=false \
+    PHP_INI_DIR=/usr/local/etc/php
 
 RUN set -x \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
