@@ -48,6 +48,7 @@ RUN set -x \
     && apt-get update \
     && apt-get install -y gnupg2 \
     && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
+    && apt-get update \
     \
     # Install PHP Composer (package manager)
     \
@@ -59,7 +60,7 @@ RUN set -x \
     && usermod -u 1000 www-data \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
-    && apt-get install --no-install-recommends -y cron supervisor \
+    && apt-get install --no-install-recommends -y --force-yes cron supervisor \
         git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev python-pip \
     \
     && docker-php-ext-install pdo_mysql \
