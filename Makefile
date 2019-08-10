@@ -5,6 +5,7 @@ SHELL=/bin/bash
 .SILENT:
 .PHONY: help
 SLACK_URL=
+LATEST_VERSION=7.3
 
 help:
 	@grep -E '^[a-zA-Z\-\_0-9\.@]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -21,8 +22,8 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
 
 push_latest: ## Tag as latest, latest-stable and push
-	make _push_latest VERSION=7.3 ARCH=x86_64
-	make _push_latest VERSION=7.3 ARCH=arm32v7
+	make _push_latest VERSION=${LATEST_VERSION} ARCH=x86_64
+	make _push_latest VERSION=${LATEST_VERSION} ARCH=arm32v7
 
 _push_latest:
 	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:latest
