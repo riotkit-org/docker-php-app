@@ -43,12 +43,14 @@ RUN set -x \
     \
     # Install recent NGINX version
     \
+    && apt-get update \
     && echo "deb http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" > /etc/apt/sources.list.d/nginx.list \
     && echo "deb-src http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" >> /etc/apt/sources.list.d/nginx.list \
-    && (apt-get update || true) \
     && apt-get install -y gnupg2 \
     && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
-    && (apt-get update || true) \
+    && apt-get update \
+    && apt-get install -y --force-yes nginx \
+    && rm -rf /etc/nginx/conf.d/* \
     \
     # Install PHP Composer (package manager)
     \
