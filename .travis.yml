@@ -3,7 +3,13 @@ services:
     - docker
 
 before_script:
+    # multiarch builds
+    - sudo docker run --privileged linuxkit/binfmt:v0.6
+
+    # dependencies
     - sudo pip install j2cli
+
+    # authorization
     - echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
