@@ -4,7 +4,7 @@ services:
 
 before_script:
     # multiarch builds
-    - sudo docker run --privileged linuxkit/binfmt:v0.6
+    - sudo docker run --rm --privileged multiarch/qemu-user-static:register
 
     # dependencies
     - sudo pip install j2cli
