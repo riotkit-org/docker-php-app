@@ -20,13 +20,20 @@ docker pull quay.io/riotkit/php-app:7.3
 
 ## Building
 
+Requirements:
+- make
+- docker
+- jq
+- j2cli (`pip install j2cli`)
+
 ```bash
 # see possible options
 make
 
 # examples
-make build_all
-make build_73_x86_64
+make all
+make build VERSION=5.5 ARCH=x86_64 QEMU=false
+make build VERSION=7.3 ARCH=arm32v7 QEMU=true
 ```
 
 ## Customizing

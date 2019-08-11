@@ -8,6 +8,7 @@ ENV ROTATE_ENABLED=true \
     ROTATE_MIN_SIZE=5k \
     ROTATE_PATH="/var/www/html/var/log/*.log" \
     CRON="" \
+    HEALTHCHECK="curl -f http://localhost/ || exit 1" \
     NGINX_ROOT_DIR=public \
     NGINX_CLIENT_MAX_BODY_SIZE=200000M \
     NGINX_TYPES_HASH_MAX_SIZE=4096 \
@@ -34,10 +35,18 @@ ENV ROTATE_ENABLED=true \
     PHP_MAX_FILE_UPLOADS=20 \
     PHP_MAX_EXECUTION_TIME=30 \
     PHP_MAX_INPUT_TIME=60 \
-    NGINX_ENABLE_CUSTOM_CONFIG=false \
     PHP_INI_DIR=/usr/local/etc/php \
     PHP_VERSION={{ VERSION }} \
-    NGINX_ENABLE_DEFAULT_LOCATION_INDEX=true
+    WWW_USER_ID=1000 \
+    WWW_GROUP_ID=1000 \
+    NGINX_ENABLE_CUSTOM_CONFIG=false \
+    NGINX_ENABLE_DEFAULT_LOCATION_INDEX=true \
+    NGINX_DEF_LOCATION_WELL_KNOWN=true \
+    NGINX_DEF_LOCATION_DOT=true \
+    NGINX_DEF_LOCATION_FAVICON=true \
+    NGINX_DEF_LOCATION_ROBOTS=true \
+    NGINX_DEF_LOCATION_HTACCESS=true \
+    NGINX_DEF_LOCATION_INDEX_PHP=true
 
 RUN set -x \
     \
@@ -115,7 +124,7 @@ EXPOSE 80
 EXPOSE 9000
 EXPOSE 9001
 
-HEALTHCHECK --interval=10s --timeout=4s \
-  CMD curl -f http://localhost/ || exit 1
+HEALTHCHECK --interval=2m --timeout=4s \
+  CMD /healthcheck.sh
 
 ENTRYPOINT /entrypoint.sh
