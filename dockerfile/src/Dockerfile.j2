@@ -83,7 +83,7 @@ RUN set -x \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
     && docker-php-ext-install xml \
-    && docker-php-ext-enable opcache \
+    {% if VERSION|float > 5.4 %}&& docker-php-ext-enable opcache \{% endif %}
     && pip install setuptools \
     && pip install wheel \
     && pip install j2cli \

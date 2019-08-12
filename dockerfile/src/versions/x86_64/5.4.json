@@ -1,0 +1,5 @@
+{
+    "FROM": "php:5.4-fpm",
+    "VERSION": "5.4",
+    "DEBIAN_RELEASE": "jessie"
+}
