@@ -19,7 +19,7 @@ before_script:
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 script:
-    - travis_wait make all SLACK_URL=$SLACK_URL
+    - make all SLACK_URL=$SLACK_URL
     # use this for rebuilding single versions:
     # - make build VERSION=7.3 ARCH=x86_64 SLACK_URL=$SLACK_URL
 
