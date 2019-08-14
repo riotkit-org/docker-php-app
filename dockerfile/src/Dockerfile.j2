@@ -117,7 +117,7 @@ RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.
     && command -v php-fpm \
     && command -v nginx
 
-ADD etc/entrypoint.d /entrypoint.d
+ADD entrypoint.d /entrypoint.d
 
 
 EXPOSE 80
