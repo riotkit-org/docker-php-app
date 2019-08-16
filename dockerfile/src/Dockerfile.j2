@@ -72,7 +72,7 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev python-pip \
+        git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev libzip-dev python-pip \
     \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install pdo_sqlite \
@@ -89,7 +89,7 @@ RUN set -x \
     && pip install wheel \
     && pip install j2cli \
     && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev gcc g++ \
+    && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev libzip-dev gcc g++ \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /usr/src/* /usr/share/doc/* \
