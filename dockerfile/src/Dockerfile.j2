@@ -92,7 +92,7 @@ RUN set -x \
     && apt-get remove -y libssl-dev libxml2-dev libsqlite3-dev libzip-dev gcc g++ \
     && apt-get autoremove -y \
     && apt-get clean \
-    && rm -rf /usr/src/* /usr/share/doc/* \
+    && rm -rf /usr/share/doc/* \
     && rm /etc/nginx/nginx.conf
 
 COPY etc /.etc.template
