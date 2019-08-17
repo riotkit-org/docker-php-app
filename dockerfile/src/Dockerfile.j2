@@ -72,7 +72,19 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev libzip-dev python-pip \
+        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev libzip-dev python-pip \
+    \
+    # Install build utils
+    \
+    && mkdir -p /opt/riotkit/utils \
+    && wget https://github.com/riotkit-org/ci-utils/archive/master.zip -O /tmp/ci-utils.zip \
+    && unzip /tmp/ci-utils.zip -d /opt/riotkit/utils \
+    && mv /opt/riotkit/utils/ci-utils*/* /opt/riotkit/utils/ \
+    && rm -rf /opt/riotkit/utils/ci-utils*/ \
+    && rm /tmp/ci-utils.zip \
+    && PATH="/opt/riotkit/utils/bin:$PATH" \
+    \
+    # Build PHP extensions
     \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install pdo_sqlite \
