@@ -94,6 +94,7 @@ RUN set -x \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
+    && docker-php-ext-install bcmath \
     && docker-php-ext-install zip \
     {% if VERSION|float <= 5.4 %}&& docker-php-ext-install mysql{% endif %} \
     {% if VERSION|float > 5.4 %}&& docker-php-ext-enable opcache{% endif %} \
