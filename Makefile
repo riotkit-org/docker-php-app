@@ -27,9 +27,7 @@ all: ## Build and push all versions
 		done \
 	done; \
 	\
-	exit $${EXIT_CODE};
-
-	make push_latest
+	exit $${EXIT_CODE}
 
 build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
 	echo " >> Building ${VERSION} for ${ARCH}"
@@ -40,8 +38,10 @@ build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
 		make _inject_qemu IMAGE=$${IMAGE}; \
 	fi
 
-	${SUDO} docker build -t wolnosciowiec/docker-php-app:${VERSION}-${ARCH} -f ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile .
-	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:${VERSION}-${ARCH}
+	set -x; ${SUDO} docker build -t wolnosciowiec/docker-php-app:${VERSION}-${ARCH} -f ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile .
+	set -x ;${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:${VERSION}-${ARCH}
+	set -x ;${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:${VERSION}-${ARCH}-$$(date '+%Y-%m-%d')
+	set -x; ${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} wolnosciowiec/docker-php-app:${VERSION}-${ARCH}-$$(date '+%Y-%m-%d')
 
 push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	echo " >> Pushing ${VERSION} for ${ARCH}"
@@ -49,11 +49,6 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}
 
 	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
-
-push_latest: ## Tag as latest, latest-stable and push
-	echo " >> Pushing latest: ${LATEST_VERSION}"
-	make _push_latest VERSION=${LATEST_VERSION} ARCH=x86_64
-	make _push_latest VERSION=${LATEST_VERSION} ARCH=arm32v7
 
 _inject_qemu:
 	echo " >> Injecting qemu arm binaries into ${IMAGE}"
@@ -65,14 +60,3 @@ _inject_qemu:
 	cat /tmp/tmp_php.tar.gz | ${SUDO} docker import - ${IMAGE}
 	rm /tmp/tmp_php.tar.gz
 	${SUDO} docker rm -f tmp_php 2>/dev/null > /dev/null || true
-
-_push_latest:
-	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:latest
-	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} quay.io/riotkit/php-app:latest-stable
-	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} wolnosciowiec/docker-php-app:latest
-	${SUDO} docker tag wolnosciowiec/docker-php-app:${VERSION}-${ARCH} wolnosciowiec/docker-php-app:latest-stable
-
-	${SUDO} docker push quay.io/riotkit/php-app:latest
-	${SUDO} docker push quay.io/riotkit/php-app:latest-stable
-	${SUDO} docker push wolnosciowiec/docker-php-app:latest
-	${SUDO} docker push wolnosciowiec/docker-php-app:latest-stable
