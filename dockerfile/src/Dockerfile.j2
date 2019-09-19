@@ -72,7 +72,7 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libsqlite3-dev libzip-dev python-pip \
+        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libzip-dev python-pip \
     \
     # Install build utils
     \
