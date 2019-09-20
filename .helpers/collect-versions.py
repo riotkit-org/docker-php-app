@@ -33,7 +33,7 @@ class CollectVersions:
     @staticmethod
     def collect_versions(architecture: str) -> list:
         return list(map(
-            lambda dir_entry: dir_entry.name.replace('.json'),
+            lambda dir_entry: dir_entry.name.replace('.json', ''),
             os.scandir('./dockerfile/src/versions/%s' % architecture)
         ))
 

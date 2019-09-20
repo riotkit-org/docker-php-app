@@ -23,6 +23,6 @@ jobs:
     {% for build in BUILDS %}
     - stage: Build {{ build.version }} at {{ build.arch }}
       script:
-            - make build VERSION={{ build.version }} ARCH={{ build.arch }} QEMU={{ build.qemu }} || (./notify.sh "${SLACK_URL}" "Failed to build php-app:{{ build.version }}-{{ build.arch }}" && EXIT_CODE=1);
+            - make build VERSION={{ build.version }} ARCH={{ build.arch }} QEMU={{ build.qemu|upper }} || (./notify.sh "${SLACK_URL}" "Failed to build php-app:{{ build.version }}-{{ build.arch }}" && EXIT_CODE=1);
             - make push VERSION={{ build.version }} ARCH={{ build.arch }} || (./notify.sh "${SLACK_URL}" "Failed to push php-app:{{ build.version }}-{{ build.arch }}" && EXIT_CODE=1);
     {% endfor %}
