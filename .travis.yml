@@ -21,28 +21,3 @@ after_failure:
 jobs:
   include:
     
-    - stage: Build 7.3.json at arm32v7
-      script:
-            - make build VERSION=7.3.json ARCH=arm32v7 QEMU=True || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3.json-arm32v7" && EXIT_CODE=1);
-            - make push VERSION=7.3.json ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3.json-arm32v7" && EXIT_CODE=1);
-    
-    - stage: Build 5.4.json at x86_64
-      script:
-            - make build VERSION=5.4.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.4.json-x86_64" && EXIT_CODE=1);
-            - make push VERSION=5.4.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.4.json-x86_64" && EXIT_CODE=1);
-    
-    - stage: Build 7.3.json at x86_64
-      script:
-            - make build VERSION=7.3.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3.json-x86_64" && EXIT_CODE=1);
-            - make push VERSION=7.3.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3.json-x86_64" && EXIT_CODE=1);
-    
-    - stage: Build 7.2.json at x86_64
-      script:
-            - make build VERSION=7.2.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.2.json-x86_64" && EXIT_CODE=1);
-            - make push VERSION=7.2.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.2.json-x86_64" && EXIT_CODE=1);
-    
-    - stage: Build 5.5.json at x86_64
-      script:
-            - make build VERSION=5.5.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.5.json-x86_64" && EXIT_CODE=1);
-            - make push VERSION=5.5.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.5.json-x86_64" && EXIT_CODE=1);
-    
