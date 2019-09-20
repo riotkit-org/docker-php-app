@@ -71,12 +71,4 @@ _download_tools:
 	chmod +x .helpers/*/*
 
 _inject_qemu:
-	echo " >> Injecting qemu arm binaries into ${IMAGE}"
-	${SUDO} docker rm -f tmp_php 2>/dev/null > /dev/null || true
-	${SUDO} docker pull ${IMAGE}
-	${SUDO} docker create --name tmp_php ${IMAGE}
-	${SUDO} docker cp ./arm/usr tmp_php:/
-	${SUDO} docker export tmp_php > /tmp/tmp_php.tar.gz
-	cat /tmp/tmp_php.tar.gz | ${SUDO} docker import - ${IMAGE}
-	rm /tmp/tmp_php.tar.gz
-	${SUDO} docker rm -f tmp_php 2>/dev/null > /dev/null || true
+	./.helpers/current/inject-qemu-bin-into-container ${IMAGE}
