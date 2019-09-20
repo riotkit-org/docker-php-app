@@ -3,25 +3,46 @@ services:
     - docker
 
 before_script:
-    # multiarch builds
-    - docker --version  # document the version Travis is using (currently 17.x, which is way too old)
-    - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json # try to use manifests
-    - mkdir -p $HOME/.docker
-    - echo '{"experimental":"enabled"}' | tee $HOME/.docker/config.json # needed to use docker manifest
-    - sudo service docker restart
-    - sudo docker run --rm --privileged multiarch/qemu-user-static:register --reset
-
     # dependencies
-    - sudo pip install j2cli
+    - pip install j2cli requests
+    - wget https://github.com/riotkit-org/ci-utils/archive/v2.0.0.zip -O /tmp/ci-utils.zip
+    - curl "https://raw.githubusercontent.com/riotkit-org/ci-utils/master/ci-integration/travis.sh" -s | bash
+
+    # activate ARM builds on travis
+    - /opt/riotkit/utils/bin/setup-travis-arm-builds
 
     # authorization
     - echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
-script:
-    - make all SLACK_URL=$SLACK_URL
-    # use this for rebuilding single versions:
-    # - make build VERSION=7.3 ARCH=x86_64 SLACK_URL=$SLACK_URL
-
 after_failure:
     - ./notify.sh "${SLACK_URL}" "php-app container build failure."
+
+jobs:
+  include:
+    
+    - stage: Build 7.3.json at arm32v7
+      script:
+            - make build VERSION=7.3.json ARCH=arm32v7 QEMU=True || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3.json-arm32v7" && EXIT_CODE=1);
+            - make push VERSION=7.3.json ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3.json-arm32v7" && EXIT_CODE=1);
+    
+    - stage: Build 5.4.json at x86_64
+      script:
+            - make build VERSION=5.4.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.4.json-x86_64" && EXIT_CODE=1);
+            - make push VERSION=5.4.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.4.json-x86_64" && EXIT_CODE=1);
+    
+    - stage: Build 7.3.json at x86_64
+      script:
+            - make build VERSION=7.3.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3.json-x86_64" && EXIT_CODE=1);
+            - make push VERSION=7.3.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3.json-x86_64" && EXIT_CODE=1);
+    
+    - stage: Build 7.2.json at x86_64
+      script:
+            - make build VERSION=7.2.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.2.json-x86_64" && EXIT_CODE=1);
+            - make push VERSION=7.2.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.2.json-x86_64" && EXIT_CODE=1);
+    
+    - stage: Build 5.5.json at x86_64
+      script:
+            - make build VERSION=5.5.json ARCH=x86_64 QEMU=False || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.5.json-x86_64" && EXIT_CODE=1);
+            - make push VERSION=5.5.json ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.5.json-x86_64" && EXIT_CODE=1);
+    

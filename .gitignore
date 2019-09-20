@@ -1,2 +1,5 @@
 /.idea
 /dockerfile/build/*/*.Dockerfile
+/.helpers/*
+!/.helpers/.gitkeep
+!/.helpers/collect-versions.py

@@ -1,5 +1,6 @@
 #!/usr/bin/env make
 
+RIOTKIT_UTILS_VER=v2.0.0
 SUDO=sudo
 SHELL=/bin/bash
 .SILENT:
@@ -9,25 +10,6 @@ LATEST_VERSION=7.3
 
 help:
 	@grep -E '^[a-zA-Z\-\_0-9\.@]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-all: ## Build and push all versions
-	EXIT_CODE=0; \
-	for arch_path in $$(find ./dockerfile/src/versions/* -type d); do \
-		ARCH=$$(basename $${arch_path}); \
-		for file in $$(find $${arch_path}/*.json -type f); do \
-			VERSION=$$(basename -s .json $${file}); \
-			QEMU=true; \
-			\
-			if [[ "${ARCH}" == "x86_64" ]]; then \
-				QEMU=false; \
-			fi; \
-			\
-			make build VERSION=$${VERSION} ARCH=$${ARCH} QEMU=$${QEMU} || (./notify.sh "${SLACK_URL}" "Failed to build php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1); \
-			make push VERSION=$${VERSION} ARCH=$${ARCH} || (./notify.sh "${SLACK_URL}" "Failed to push php-app:$${VERSION}-$${ARCH}" && EXIT_CODE=1); \
-		done \
-	done; \
-	\
-	exit $${EXIT_CODE}
 
 build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
 	echo " >> Building ${VERSION} for ${ARCH}"
@@ -52,6 +34,35 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}-$$(date '+%Y-%m-%d')
 
 	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
+
+
+### COMMON AUTOMATION
+
+dev@generate_travis_file: _download_tools ## Generate .travis.yml file
+	export BUILDS=$$(./.helpers/collect-versions.py); \
+	./.helpers/env-to-json parse_json | j2 ".travis.yml.j2" -f json > .travis.yml
+
+dev@generate_readme: ## Renders the README.md from README.md.j2
+	RIOTKIT_PATH=./.helpers DOCKERFILE_PATH=dockerfile/src/Dockerfile.j2 ./.helpers/docker-generate-readme
+
+dev@before_commit: dev@generate_readme dev@generate_travis_file ## Git hook before commit
+	git add README.md .travis.yml
+
+dev@develop: ## Setup development environment, install git hooks
+	echo " >> Setting up GIT hooks for development"
+	mkdir -p .git/hooks
+	echo "#\!/bin/bash" > .git/hooks/pre-commit
+	echo "make dev@before_commit" >> .git/hooks/pre-commit
+	chmod +x .git/hooks/pre-commit
+
+_download_tools:
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/extract-envs-from-dockerfile > .helpers/extract-envs-from-dockerfile
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/env-to-json                  > .helpers/env-to-json
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/for-each-github-release      > .helpers/for-each-github-release
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/docker-generate-readme       > .helpers/docker-generate-readme
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/inject-qemu-bin-into-container > .helpers/inject-qemu-bin-into-container
+	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/setup-travis-arm-builds        > .helpers/setup-travis-arm-builds
+	chmod +x .helpers/*
 
 _inject_qemu:
 	echo " >> Injecting qemu arm binaries into ${IMAGE}"

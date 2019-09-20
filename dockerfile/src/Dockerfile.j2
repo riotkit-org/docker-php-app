@@ -72,7 +72,7 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev python-pip \
+        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip \
     \
     # Install build utils
     \
@@ -104,7 +104,7 @@ RUN set -x \
     && pip install wheel \
     && pip install j2cli \
     && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev gcc g++ \
+    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev gcc g++ \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /usr/share/doc/* \
