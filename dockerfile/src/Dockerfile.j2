@@ -72,7 +72,8 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip nginx procps make libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip \
+        git wget nano unzip nginx procps make libpq5 libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip \
+        libjpeg libpng12-0 libxpm4 \
     \
     # Install build utils
     \
@@ -83,6 +84,10 @@ RUN set -x \
     && rm -rf /opt/riotkit/utils/ci-utils*/ \
     && rm /tmp/ci-utils.zip \
     && PATH="/opt/riotkit/utils/bin:$PATH" \
+    \
+    # Configure PHP extensions
+    \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include  --enable-gd-native-ttf \
     \
     # Build PHP extensions
     \
@@ -104,7 +109,7 @@ RUN set -x \
     && pip install wheel \
     && pip install j2cli \
     && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev gcc g++ gnupg2 \
+    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev gcc g++ gnupg2 libjpeg libpng12-0 libxpm4 \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /usr/share/doc/* \
