@@ -15,7 +15,7 @@ build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
 	echo " >> Building ${VERSION} for ${ARCH}"
 	cat ./dockerfile/src/versions/${ARCH}/${VERSION}.json | j2 ./dockerfile/src/Dockerfile.j2 -f json  > ./dockerfile/build/${ARCH}/${VERSION}.Dockerfile
 
-	if [[ "${QEMU}" == "true" ]]; then \
+	if [[ "${QEMU}" == "TRUE" ]]; then \
 		IMAGE=$$(jq '.FROM' ./dockerfile/src/versions/${ARCH}/${VERSION}.json); \
 		make _inject_qemu IMAGE=$${IMAGE}; \
 	fi
