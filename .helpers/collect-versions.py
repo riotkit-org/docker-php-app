@@ -8,7 +8,7 @@ class CollectVersions:
     STANDARD_ARCH = 'x86_64'
 
     def main(self):
-        architectures = self.collect_architectures()
+        architectures = reversed(self.collect_architectures())
         params = []
 
         for architecture in architectures:
