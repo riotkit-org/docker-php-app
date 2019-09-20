@@ -38,17 +38,17 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 
 ### COMMON AUTOMATION
 
-dev@generate_travis_file: _download_tools ## Generate .travis.yml file
+dev@generate_travis_file: ## Generate .travis.yml file
 	export BUILDS=$$(./.helpers/collect-versions.py); \
-	./.helpers/env-to-json parse_json | j2 ".travis.yml.j2" -f json > .travis.yml
+	./.helpers/current/env-to-json parse_json | j2 ".travis.yml.j2" -f json > .travis.yml
 
 dev@generate_readme: ## Renders the README.md from README.md.j2
-	RIOTKIT_PATH=./.helpers DOCKERFILE_PATH=dockerfile/src/Dockerfile.j2 ./.helpers/docker-generate-readme
+	RIOTKIT_PATH=./.helpers/current DOCKERFILE_PATH=dockerfile/src/Dockerfile.j2 ./.helpers/current/docker-generate-readme
 
-dev@before_commit: dev@generate_readme dev@generate_travis_file ## Git hook before commit
+dev@before_commit: _download_tools dev@generate_readme dev@generate_travis_file ## Git hook before commit
 	git add README.md .travis.yml
 
-dev@develop: ## Setup development environment, install git hooks
+dev@develop: _download_tools ## Setup development environment, install git hooks
 	echo " >> Setting up GIT hooks for development"
 	mkdir -p .git/hooks
 	echo "#\!/bin/bash" > .git/hooks/pre-commit
@@ -56,13 +56,19 @@ dev@develop: ## Setup development environment, install git hooks
 	chmod +x .git/hooks/pre-commit
 
 _download_tools:
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/extract-envs-from-dockerfile > .helpers/extract-envs-from-dockerfile
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/env-to-json                  > .helpers/env-to-json
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/for-each-github-release      > .helpers/for-each-github-release
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/docker-generate-readme       > .helpers/docker-generate-readme
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/inject-qemu-bin-into-container > .helpers/inject-qemu-bin-into-container
-	curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/setup-travis-arm-builds        > .helpers/setup-travis-arm-builds
-	chmod +x .helpers/*
+	if [[ ! -d ".helpers/${RIOTKIT_UTILS_VER}" ]]; then \
+		mkdir -p .helpers/${RIOTKIT_UTILS_VER}; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/extract-envs-from-dockerfile > .helpers/${RIOTKIT_UTILS_VER}/extract-envs-from-dockerfile; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/env-to-json                  > .helpers/${RIOTKIT_UTILS_VER}/env-to-json; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/for-each-github-release      > .helpers/${RIOTKIT_UTILS_VER}/for-each-github-release; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/docker-generate-readme       > .helpers/${RIOTKIT_UTILS_VER}/docker-generate-readme; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/inject-qemu-bin-into-container > .helpers/${RIOTKIT_UTILS_VER}/inject-qemu-bin-into-container; \
+		curl -s https://raw.githubusercontent.com/riotkit-org/ci-utils/${RIOTKIT_UTILS_VER}/bin/setup-travis-arm-builds        > .helpers/${RIOTKIT_UTILS_VER}/setup-travis-arm-builds; \
+	fi
+
+	rm -f .helpers/current
+	ln -s $$(pwd)/.helpers/${RIOTKIT_UTILS_VER} $$(pwd)/.helpers/current
+	chmod +x .helpers/*/*
 
 _inject_qemu:
 	echo " >> Injecting qemu arm binaries into ${IMAGE}"
