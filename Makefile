@@ -38,14 +38,14 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 
 ### COMMON AUTOMATION
 
-dev@generate_travis_file: ## Generate .travis.yml file
+dev@generate_travis_file: _download_tools ## Generate .travis.yml file
 	export BUILDS=$$(./.helpers/collect-versions.py); \
 	./.helpers/current/env-to-json parse_json | j2 ".travis.yml.j2" -f json > .travis.yml
 
-dev@generate_readme: ## Renders the README.md from README.md.j2
+dev@generate_readme: _download_tools ## Renders the README.md from README.md.j2
 	RIOTKIT_PATH=./.helpers/current DOCKERFILE_PATH=dockerfile/src/Dockerfile.j2 ./.helpers/current/docker-generate-readme
 
-dev@before_commit: _download_tools dev@generate_readme dev@generate_travis_file ## Git hook before commit
+dev@before_commit: dev@generate_readme dev@generate_travis_file ## Git hook before commit
 	git add README.md .travis.yml
 
 dev@develop: _download_tools ## Setup development environment, install git hooks
@@ -70,5 +70,5 @@ _download_tools:
 	ln -s $$(pwd)/.helpers/${RIOTKIT_UTILS_VER} $$(pwd)/.helpers/current
 	chmod +x .helpers/*/*
 
-_inject_qemu:
+_inject_qemu: _download_tools
 	./.helpers/current/inject-qemu-bin-into-container ${IMAGE}
