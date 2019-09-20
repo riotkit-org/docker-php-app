@@ -46,3 +46,8 @@ jobs:
             - make build VERSION=7.3 ARCH=arm32v7 QEMU=TRUE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-arm32v7" && exit 1);
             - make push VERSION=7.3 ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-arm32v7" && exit 1);
     
+    - stage: Build 7.2 at arm32v7
+      script:
+            - make build VERSION=7.2 ARCH=arm32v7 QEMU=TRUE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.2-arm32v7" && exit 1);
+            - make push VERSION=7.2 ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.2-arm32v7" && exit 1);
+    
