@@ -72,7 +72,7 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip libjpeg62-turbo nginx procps make libpq5 libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip \
+        git wget nano unzip libpng16-16 libjpeg62-turbo nginx procps make libpq5 libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip \
     \
     # Install build utils
     \
