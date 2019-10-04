@@ -2,5 +2,5 @@
     "FROM": "php:5.4-fpm",
     "VERSION": "5.4",
     "DEBIAN_RELEASE": "jessie",
-    "BUILD_SPECIFIC_PACKAGES": "libpng12-0 libpng3 libzip2"
+    "BUILD_SPECIFIC_PACKAGES": "libpng12-0 libpng3 libzip2 libjpeg62"
 }

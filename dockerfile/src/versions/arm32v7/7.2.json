@@ -2,5 +2,5 @@
     "FROM": "arm32v7/php:7.2-fpm",
     "VERSION": "7.2",
     "DEBIAN_RELEASE": "buster",
-    "BUILD_SPECIFIC_PACKAGES": "libpng16-16 libzip4"
+    "BUILD_SPECIFIC_PACKAGES": "libpng16-16 libzip4 libjpeg62-turbo"
 }

@@ -2,5 +2,5 @@
     "FROM": "php:7.3-fpm",
     "VERSION": "7.3",
     "DEBIAN_RELEASE": "buster",
-    "BUILD_SPECIFIC_PACKAGES": "libpng16-16 libzip4"
+    "BUILD_SPECIFIC_PACKAGES": "libpng16-16 libzip4 libjpeg62-turbo"
 }

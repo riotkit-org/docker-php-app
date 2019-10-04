@@ -73,7 +73,7 @@ RUN set -x \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
         git wget nano unzip libjpeg62-turbo nginx procps make libpq5 \
-        libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev \
+        libssl-dev libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev \
         python-pip {{ BUILD_SPECIFIC_PACKAGES }} \
     \
     # Install build utils
@@ -88,7 +88,7 @@ RUN set -x \
     \
     # Configure PHP extensions
     \
-    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include  --enable-gd-native-ttf \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf \
     \
     # Build PHP extensions
     \
@@ -110,7 +110,8 @@ RUN set -x \
     && pip install wheel \
     && pip install j2cli \
     && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev gcc g++ gnupg2 \
+    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev \
+                         libxpm-dev libzip-dev libpq-dev gcc g++ gnupg2 \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /usr/share/doc/* \
@@ -119,6 +120,7 @@ RUN set -x \
 COPY etc /.etc.template
 COPY usr /.usr.template
 ADD *.sh /
+ADD tests /opt/tests
 RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.sh \
     && mkdir /entrypoint.d -p \
     && mkdir /run/php/ -p \
@@ -137,7 +139,8 @@ RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.
     && set -x \
     && command -v php \
     && command -v php-fpm \
-    && command -v nginx
+    && command -v nginx \
+    && /test.sh
 
 ADD entrypoint.d /entrypoint.d
 
