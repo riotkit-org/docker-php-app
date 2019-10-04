@@ -72,9 +72,9 @@ RUN set -x \
     && groupmod -g 1000 www-data \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip libjpeg62-turbo nginx procps make libpq5 \
+        git wget nano unzip libjpeg62-turbo nginx procps make libpq5 libfreetype6 \
         libssl-dev libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev \
-        python-pip {{ BUILD_SPECIFIC_PACKAGES }} \
+        python-pip {{ BUILD_SPECIFIC_PACKAGES }} libfreetype6-dev \
     \
     # Install build utils
     \
@@ -95,7 +95,9 @@ RUN set -x \
     && docker-php-ext-install calendar \
     && docker-php-ext-install phar \
     && docker-php-ext-install mysqli \
-    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr \
+        {% if VERSION|float <= 5.4 %}--enable-gd-native-ttf{% endif %} \
+        {% if VERSION|float < 7.4 %}--with-freetype-dir=/usr{% else %}--with-freetype{% endif %} \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
     && docker-php-ext-install bcmath \
