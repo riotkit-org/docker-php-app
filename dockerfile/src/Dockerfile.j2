@@ -86,10 +86,6 @@ RUN set -x \
     && rm /tmp/ci-utils.zip \
     && PATH="/opt/riotkit/utils/bin:$PATH" \
     \
-    # Configure PHP extensions
-    \
-    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf \
-    \
     # Build PHP extensions
     \
     && docker-php-ext-install pdo_mysql \
@@ -99,6 +95,7 @@ RUN set -x \
     && docker-php-ext-install calendar \
     && docker-php-ext-install phar \
     && docker-php-ext-install mysqli \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
     && docker-php-ext-install bcmath \
