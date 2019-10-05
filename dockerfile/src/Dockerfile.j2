@@ -95,9 +95,9 @@ RUN set -x \
     && docker-php-ext-install calendar \
     && docker-php-ext-install phar \
     && docker-php-ext-install mysqli \
-    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-png-dir=/usr/include \
         {% if VERSION|float <= 5.4 %}--enable-gd-native-ttf{% endif %} \
-        {% if VERSION|float < 7.4 %}--with-freetype-dir=/usr{% else %}--with-freetype{% endif %} \
+        {% if VERSION|float < 7.4 %}--with-freetype-dir=/usr/include/freetype2{% else %}--with-freetype{% endif %} \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
     && docker-php-ext-install bcmath \
