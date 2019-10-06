@@ -9,11 +9,15 @@ ENV ROTATE_ENABLED=true \
     ROTATE_PATH="/var/www/html/var/log/*.log" \
     CRON="" \
     HEALTHCHECK="curl -f http://localhost/ || exit 1" \
+    # Chroot directory ex. /public
     NGINX_ROOT_DIR=public \
+    # Maximum body size ex. in POST
     NGINX_CLIENT_MAX_BODY_SIZE=200000M \
     NGINX_TYPES_HASH_MAX_SIZE=4096 \
     NGINX_KEEPALIVE_TIMEOUT=65 \
+    # GZIP output. May be redundant when there is a gateway above
     NGINX_GZIP=off \
+    # Worker processes count
     NGINX_WORKER_PROCESSES=4 \
     NGINX_WORKER_CONNECTIONS=1024 \
     NGINX_SENDFILE=on \
@@ -46,7 +50,29 @@ ENV ROTATE_ENABLED=true \
     NGINX_DEF_LOCATION_FAVICON=true \
     NGINX_DEF_LOCATION_ROBOTS=true \
     NGINX_DEF_LOCATION_HTACCESS=true \
-    NGINX_DEF_LOCATION_INDEX_PHP=true
+    NGINX_DEF_LOCATION_INDEX_PHP=true \
+    # Choose how the process manager will control the number of child processes. Options: static, dynamic, ondemand
+    FPM_PM_MODE=dynamic \
+    # The number of child processes to be created when pm is set to 'static' and the maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
+    FPM_PM_MAX_CHILDREN=5 \
+    # The number of child processes created on startup.
+    FPM_PM_START_SERVERS=2 \
+    # The desired minimum number of idle server processes.
+    FPM_PM_MIN_SPARE_SERVERS=1 \
+    # The desired maximum number of idle server processes.
+    FPM_PM_MAX_SPARE_SERVERS=3 \
+    # The number of seconds after which an idle process will be killed.
+    FPM_PM_PROCSS_IDLE_TIMEOUT=10s \
+    # The number of requests each child process should execute before respawning.
+    FPM_PM_MAX_REQUESTS=0 \
+    # The timeout for serving a single request after which the worker process will be killed.
+    FPM_REQUEST_TERMINATE_TIMEOUT=0 \
+    # Redirect worker stdout and stderr into main error log. Note: on highloaded environement, this can cause some delay in the page process time (several ms).
+    FPM_CATCH_WORKERS_OUTPUT=no \
+    # Clear environment in FPM workers
+    FPM_CLEAR_ENV=no \
+    # Limits the extensions of the main script FPM will allow to parse
+    FPM_SECURITY_LIMIT_EXTENSIONS=.php
 
 RUN set -x \
     \

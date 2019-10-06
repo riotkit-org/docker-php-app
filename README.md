@@ -60,10 +60,10 @@ List of all environment variables that could be used.
 
 - HEALTHCHECK # (default: "curl -f http://localhost/ || exit 1")
 
-
+# Chroot directory ex. /public
 - NGINX_ROOT_DIR # (default: public)
 
-
+# Maximum body size ex. in POST
 - NGINX_CLIENT_MAX_BODY_SIZE # (default: 200000M)
 
 
@@ -72,10 +72,10 @@ List of all environment variables that could be used.
 
 - NGINX_KEEPALIVE_TIMEOUT # (default: 65)
 
-
+# GZIP output. May be redundant when there is a gateway above
 - NGINX_GZIP # (default: off)
 
-
+# Worker processes count
 - NGINX_WORKER_PROCESSES # (default: 4)
 
 
@@ -173,6 +173,39 @@ List of all environment variables that could be used.
 
 
 - NGINX_DEF_LOCATION_INDEX_PHP # (default: true)
+
+# Choose how the process manager will control the number of child processes. Options: static, dynamic, ondemand
+- FPM_PM_MODE # (default: dynamic)
+
+# The number of child processes to be created when pm is set to 'static' and the maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
+- FPM_PM_MAX_CHILDREN # (default: 5)
+
+# The number of child processes created on startup.
+- FPM_PM_START_SERVERS # (default: 2)
+
+# The desired minimum number of idle server processes.
+- FPM_PM_MIN_SPARE_SERVERS # (default: 1)
+
+# The desired maximum number of idle server processes.
+- FPM_PM_MAX_SPARE_SERVERS # (default: 3)
+
+# The number of seconds after which an idle process will be killed.
+- FPM_PM_PROCSS_IDLE_TIMEOUT # (default: 10s)
+
+# The number of requests each child process should execute before respawning.
+- FPM_PM_MAX_REQUESTS # (default: 0)
+
+# The timeout for serving a single request after which the worker process will be killed.
+- FPM_REQUEST_TERMINATE_TIMEOUT # (default: 0)
+
+# Redirect worker stdout and stderr into main error log. Note: on highloaded environement, this can cause some delay in the page process time (several ms).
+- FPM_CATCH_WORKERS_OUTPUT # (default: no)
+
+# Clear environment in FPM workers
+- FPM_CLEAR_ENV # (default: no)
+
+# Limits the extensions of the main script FPM will allow to parse
+- FPM_SECURITY_LIMIT_EXTENSIONS # (default: .php)
 
 
 ```
