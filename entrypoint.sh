@@ -17,4 +17,6 @@ touch /var/log/cron.log
 chown www-data:www-data /var/log/cron.log
 
 echo " >> Running supervisord..."
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+exec /read-app-logs.sh

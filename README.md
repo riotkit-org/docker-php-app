@@ -54,16 +54,22 @@ List of all environment variables that could be used.
 
 - ROTATE_PATH # (default: "/var/www/html/var/log/*.log")
 
+# Set a custom log path
+- APP_LOG_PATH # (default: "")
+
+# Wait X seconds for the application log to appear
+- WAIT_FOR_LOG # (default: 15)
+
 
 - CRON # (default: "")
 
-
+# Allows to set a more specific health check
 - HEALTHCHECK # (default: "curl -f http://localhost/ || exit 1")
 
-# Chroot directory ex. /public
+# Chroot directory eg. /public
 - NGINX_ROOT_DIR # (default: public)
 
-# Maximum body size ex. in POST
+# Maximum body size eg. in POST
 - NGINX_CLIENT_MAX_BODY_SIZE # (default: 200000M)
 
 
@@ -102,8 +108,11 @@ List of all environment variables that could be used.
 
 - NGINX_FCGI_BUFFERS # (default: "16 512k")
 
+# Fetch the long/big request at first, then pass it to application? (recommended when container is directly accessible on the internet, not recommended when is behind a gateway which is already buffering requests)
+- NGINX_REQUEST_BUFFERING # (default: "on")
 
-- SUPERVISOR_LOG_LEVEL # (default: debug)
+# Supervisor log level
+- SUPERVISOR_LOG_LEVEL # (default: info)
 
 
 - SUPERVISOR_LOG_BACKUPS # (default: 2)
@@ -111,28 +120,28 @@ List of all environment variables that could be used.
 
 - SUPERVISOR_LOG_MAXBYTES # (default: 5MB)
 
+# PHP per-request memory limit
+- PHP_MEMORY_LIMIT # (default: 256M)
 
-- PHP_MEMORY_LIMIT # (default: 128M)
-
-
+# PHP error-reporting level
 - PHP_ERROR_REPORTING # (default: "E_ALL & ~E_DEPRECATED & ~E_STRICT")
 
 
 - PHP_DISPLAY_ERRORS # (default: Off)
 
-
+# Format errors in HTML format?
 - PHP_HTML_ERRORS # (default: On)
 
-
+# Max file size. Important for files upload. PHP_POST_MAX_SIZE needs to be also increased when this value is increased.
 - PHP_UPLOAD_MAX_FILESIZE # (default: 2M)
 
-
+# Max POST body size
 - PHP_POST_MAX_SIZE # (default: 8M)
 
 
 - PHP_MAX_FILE_UPLOADS # (default: 20)
 
-
+# Maximum execution time of a single request
 - PHP_MAX_EXECUTION_TIME # (default: 30)
 
 
@@ -141,7 +150,7 @@ List of all environment variables that could be used.
 
 - PHP_INI_DIR # (default: /usr/local/etc/php)
 
-
+# (internal)
 - PHP_VERSION # (default: {{ VERSION }})
 
 

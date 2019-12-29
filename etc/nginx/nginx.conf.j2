@@ -24,6 +24,7 @@ http {
     fastcgi_busy_buffers_size {{ NGINX_FCGI_BUSY_BUFF_SIZE }};
     fastcgi_buffer_size {{ NGINX_FCGI_BUFF_SIZE }};
     fastcgi_buffers {{ NGINX_FCGI_BUFFERS }};
+    proxy_request_buffering {{ NGINX_REQUEST_BUFFERING }};
 
     access_log /dev/stdout;
     error_log /dev/stderr;

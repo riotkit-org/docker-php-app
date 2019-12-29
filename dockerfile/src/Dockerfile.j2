@@ -7,11 +7,16 @@ ENV ROTATE_ENABLED=true \
     ROTATE_MAX_AGE=5 \
     ROTATE_MIN_SIZE=5k \
     ROTATE_PATH="/var/www/html/var/log/*.log" \
+    # Set a custom log path
+    APP_LOG_PATH="" \
+    # Wait X seconds for the application log to appear
+    WAIT_FOR_LOG=15 \
     CRON="" \
+    # Allows to set a more specific health check
     HEALTHCHECK="curl -f http://localhost/ || exit 1" \
-    # Chroot directory ex. /public
+    # Chroot directory eg. /public
     NGINX_ROOT_DIR=public \
-    # Maximum body size ex. in POST
+    # Maximum body size eg. in POST
     NGINX_CLIENT_MAX_BODY_SIZE=200000M \
     NGINX_TYPES_HASH_MAX_SIZE=4096 \
     NGINX_KEEPALIVE_TIMEOUT=65 \
@@ -27,19 +32,29 @@ ENV ROTATE_ENABLED=true \
     NGINX_FCGI_BUSY_BUFF_SIZE=786k \
     NGINX_FCGI_BUFF_SIZE=512k \
     NGINX_FCGI_BUFFERS="16 512k" \
-    SUPERVISOR_LOG_LEVEL=debug \
+    # Fetch the long/big request at first, then pass it to application? (recommended when container is directly accessible on the internet, not recommended when is behind a gateway which is already buffering requests)
+    NGINX_REQUEST_BUFFERING="on" \
+    # Supervisor log level
+    SUPERVISOR_LOG_LEVEL=info \
     SUPERVISOR_LOG_BACKUPS=2 \
     SUPERVISOR_LOG_MAXBYTES=5MB \
-    PHP_MEMORY_LIMIT=128M \
+    # PHP per-request memory limit
+    PHP_MEMORY_LIMIT=256M \
+    # PHP error-reporting level
     PHP_ERROR_REPORTING="E_ALL & ~E_DEPRECATED & ~E_STRICT" \
     PHP_DISPLAY_ERRORS=Off \
+    # Format errors in HTML format?
     PHP_HTML_ERRORS=On \
+    # Max file size. Important for files upload. PHP_POST_MAX_SIZE needs to be also increased when this value is increased.
     PHP_UPLOAD_MAX_FILESIZE=2M \
+    # Max POST body size
     PHP_POST_MAX_SIZE=8M \
     PHP_MAX_FILE_UPLOADS=20 \
+    # Maximum execution time of a single request
     PHP_MAX_EXECUTION_TIME=30 \
     PHP_MAX_INPUT_TIME=60 \
     PHP_INI_DIR=/usr/local/etc/php \
+    # (internal)
     PHP_VERSION={{ VERSION }} \
     WWW_USER_ID=1000 \
     WWW_GROUP_ID=1000 \
@@ -85,22 +100,29 @@ RUN set -x \
     && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
     && apt-get update \
     && apt-get install -y --force-yes nginx \
-    && rm -rf /etc/nginx/conf.d/* \
-    \
-    # Install PHP Composer (package manager)
-    \
+    && apt-get clean \
+    && rm -rf /etc/nginx/conf.d/*
+
+# Install PHP Composer (package manager)
+RUN set -x \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && mv composer.phar /usr/bin/composer \
     && rm composer-setup.php \
-    && chmod +x /usr/bin/composer \
+    && chmod +x /usr/bin/composer
+
+# We will operate on this user
+RUN set -x \
     && usermod -u 1000 www-data \
-    && groupmod -g 1000 www-data \
+    && groupmod -g 1000 www-data
+
+ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} libfreetype6-dev libssl-dev gnupg2 gcc g++ libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip"
+
+# Install packages and build PHP
+RUN set -x \
     && apt-get upgrade -y \
-    && apt-get install --no-install-recommends -y --force-yes cron supervisor \
-        git wget nano unzip libjpeg62-turbo nginx procps make libpq5 libfreetype6 \
-        libssl-dev libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev \
-        python-pip {{ BUILD_SPECIFIC_PACKAGES }} libfreetype6-dev \
+    && apt-get install --no-install-recommends -y cron supervisor \
+        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     \
     # Install build utils
     \
@@ -121,9 +143,13 @@ RUN set -x \
     && docker-php-ext-install calendar \
     && docker-php-ext-install phar \
     && docker-php-ext-install mysqli \
-    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-png-dir=/usr/include \
-        {% if VERSION|float <= 5.4 %}--enable-gd-native-ttf{% endif %} \
-        {% if VERSION|float < 7.4 %}--with-freetype-dir=/usr/include/freetype2{% else %}--with-freetype{% endif %} \
+    && docker-php-ext-configure gd \
+    \
+    {% if VERSION|float >= 7.4 %} --with-jpeg {% else %} --with-jpeg-dir=/usr/include --with-png-dir=/usr/include {% endif %} \
+    \
+    {% if VERSION|float <= 5.4 %}--enable-gd-native-ttf{% endif %} \
+    {% if VERSION|float < 7.4 %}--with-freetype-dir=/usr/include/freetype2{% else %}--with-freetype{% endif %} \
+    \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo \
     && docker-php-ext-install bcmath \
@@ -131,16 +157,18 @@ RUN set -x \
     && docker-php-ext-install mbstring \
     {% if VERSION|float <= 5.4 %}&& docker-php-ext-install mysql{% endif %} \
     {% if VERSION|float > 5.4 %}&& docker-php-ext-enable opcache{% endif %} \
-    && pip install setuptools \
-    && pip install wheel \
     && pip install j2cli \
-    && pip install gitver \
-    && apt-get remove -y libssl-dev libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev \
-                         libxpm-dev libzip-dev libpq-dev gcc g++ gnupg2 \
+    && apt-get remove -y $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /usr/share/doc/* \
     && rm /etc/nginx/nginx.conf
+
+# Install required libraries (their dependencies are required - those are dynamic)
+RUN set -x \
+    && apt-get update -y \
+    && apt-get install -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 \
+    && apt-get clean
 
 COPY etc /.etc.template
 COPY usr /.usr.template
@@ -161,10 +189,6 @@ RUN chmod +x /entrypoint.sh /prepare-etc.sh /prepare-usr.sh /render-jinja-files.
     && /prepare-usr.sh \
     && rm -rf /.etc.test /.etc.test.dest \
     \
-    && set -x \
-    && command -v php \
-    && command -v php-fpm \
-    && command -v nginx \
     && /test.sh
 
 ADD entrypoint.d /entrypoint.d

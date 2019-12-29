@@ -5,8 +5,6 @@ startretries=6
 autorestart=true
 autostart=true
 user=root
-stdout_events_enabled=true
-stderr_events_enabled=true
 
 [program:php]
 command=php-fpm -F {% if PHP_VERSION|float > 5.5 %}-O{% endif %}
@@ -14,8 +12,6 @@ startretries=6
 autorestart=true
 autostart=true
 user=root
-stdout_events_enabled=true
-stderr_events_enabled=true
 
 [program:cron]
 command=cron -f
@@ -23,14 +19,3 @@ startretries=6
 autorestart=true
 autostart=true
 user=root
-stdout_events_enabled=true
-stderr_events_enabled=true
-
-[program:logs]
-command=/read-app-logs.sh
-startretries=6
-autorestart=true
-autostart=true
-user=root
-stdout_events_enabled=true
-stderr_events_enabled=true

@@ -2,7 +2,7 @@
 logfile=/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)
 pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
 childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
-nodaemon=true
+nodaemon=false
 loglevel={{ SUPERVISOR_LOG_LEVEL }}
 logfile_backups={{ SUPERVISOR_LOG_BACKUPS }}
 logfile_maxbytes={{ SUPERVISOR_LOG_MAXBYTES }}
