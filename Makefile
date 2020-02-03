@@ -35,6 +35,12 @@ push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 
 	./notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
 
+dev@build_all: _download_tools ## Build locally all possible versions
+	export BUILDS=$$(./.helpers/collect-versions.py); \
+	./.helpers/current/env-to-json parse_json | j2 "test-all-versions.sh.j2" -f json > test-all-versions.sh
+	chmod +x test-all-versions.sh
+	./test-all-versions.sh
+	rm test-all-versions.sh
 
 ### COMMON AUTOMATION
 
