@@ -122,7 +122,7 @@ ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} libfreetype
 RUN set -x \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y cron supervisor \
-        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
+        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev graphicsmagick-imagemagick-compat $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     \
     # Install build utils
     \
