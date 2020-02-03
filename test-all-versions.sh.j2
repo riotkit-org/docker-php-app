@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -x
+
+{% for build in BUILDS %}
+make build VERSION={{ build.version }} ARCH={{ build.arch }} QEMU={{ build.qemu|upper }} > /tmp/build-php-{{ build.version }}-{{ build.arch }}.log 2>&1;
+
+{% endfor %}
