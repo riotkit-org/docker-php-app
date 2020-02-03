@@ -122,7 +122,7 @@ ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} libfreetype
 RUN set -x \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y cron supervisor \
-        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev graphicsmagick-imagemagick-compat $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
+        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     \
     # Install build utils
     \
@@ -167,7 +167,7 @@ RUN set -x \
 # Install required libraries (their dependencies are required - those are dynamic)
 RUN set -x \
     && apt-get update -y \
-    && apt-get install -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 \
+    && apt-get install --no-install-recommends -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 graphicsmagick-imagemagick-compat \
     && apt-get clean
 
 COPY etc /.etc.template
