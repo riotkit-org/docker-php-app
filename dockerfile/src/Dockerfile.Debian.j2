@@ -1,0 +1,47 @@
+{% extends "dockerfile/src/Dockerfile.Base.j2" %}
+
+{% block nginx %}
+RUN set -x \
+    && apt-get update \
+    && echo "deb http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" > /etc/apt/sources.list.d/nginx.list \
+    && echo "deb-src http://nginx.org/packages/debian/ {{ DEBIAN_RELEASE }} nginx" >> /etc/apt/sources.list.d/nginx.list \
+    && apt-get install -y gnupg2 \
+    && curl -L https://nginx.org/keys/nginx_signing.key | apt-key add - \
+    && apt-get update \
+    && apt-get install -y --force-yes nginx \
+    && apt-get clean \
+    && rm -rf /etc/nginx/conf.d/*
+{% endblock %}
+
+{% block build %}
+ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} libfreetype6-dev libssl-dev gnupg2 gcc g++ libxml2-dev libpng-dev libjpeg-dev libjpeg62-turbo-dev libsqlite3-dev libgif-dev libxpm-dev libzip-dev libpq-dev python-pip"
+
+# Install packages and build PHP
+RUN set -x \
+    && apt-get upgrade -y \
+    && apt-get install --no-install-recommends -y cron supervisor \
+        git wget nano unzip libjpeg62-turbo procps make libpq5 libfreetype6 libonig-dev $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
+    \
+    # Install build utils
+    \
+    && mkdir -p /opt/riotkit/utils \
+    && wget https://github.com/riotkit-org/ci-utils/archive/master.zip -O /tmp/ci-utils.zip \
+    && unzip /tmp/ci-utils.zip -d /opt/riotkit/utils \
+    && mv /opt/riotkit/utils/ci-utils*/* /opt/riotkit/utils/ \
+    && rm -rf /opt/riotkit/utils/ci-utils*/ \
+    && rm /tmp/ci-utils.zip \
+    && PATH="/opt/riotkit/utils/bin:$PATH" \
+    {% include "dockerfile/src/Extensions.j2" %}
+    && pip install j2cli \
+    && apt-get remove -y $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /usr/share/doc/* \
+    && rm /etc/nginx/nginx.conf
+
+# Install required libraries (their dependencies are required - those are dynamic)
+RUN set -x \
+    && apt-get update -y \
+    && apt-get install --no-install-recommends -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 graphicsmagick-imagemagick-compat \
+    && apt-get clean
+{% endblock %}

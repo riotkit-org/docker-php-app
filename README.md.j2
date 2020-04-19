@@ -3,17 +3,19 @@ PHP application container
 
 [![Docker Repository on Quay](https://quay.io/repository/riotkit/php-app/status "Docker Repository on Quay")](https://quay.io/repository/riotkit/php-app)
 
-Microservice container pre-configured to work with Symfony 3.x/4.x that offers:
-- Nginx
+Container pre-configured to work with Symfony 3.x/4.x that offers:
+- NGINX 1.17+
 - PHP 5.4-7.x (with: pdo_mysql, pdo_sqlite, pdo_pgsql, pcntl, calendar, phar, mysqli, gd, pdo, xml, opcache)
+- Python 3 with PIP
+- 7.x images are lightweight (Alpine base), 5.x images are based on Debian for compatibility
+- JINJA 2 templating for configuration files
 - Cron
 - Supervisor
 - Logrotate
-- Gitver (https://github.com/manuelbua/gitver)
 - Composer
 - Native Symfony 4 and composer installable applications support
-- Highly extensible through environment variables
-- Per application nginx.conf file (like .htaccess, can help migrating old applications)
+- Highly extensible through environment variables (PHP-FPM adjustments, PHP memory limit and more)
+- Per application nginx.conf file (like .htaccess - helps migrating old applications)
 
 Ready to use images
 -------------------
@@ -114,6 +116,12 @@ When Jinja templates are compiled
 All files and templates from `/.usr.template` and `/.etc.template` are compiled and copied during container startup in the ENTRYPOINT.
 
 Dockerfiles are also JINJA2 templates, but those are rendered during a build on Travis-CI.
+
+Tests
+-----
+
+In `container-files/opt/tests` there are bash scripts that are executed on image build.
+New functionality such as added extensions should be tested there, to keep it working after next changes.
 
 NGINX Custom Config (like .htaccess)
 ------------------------------------

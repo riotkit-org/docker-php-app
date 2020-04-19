@@ -3,3 +3,5 @@
 /.helpers/*
 !/.helpers/.gitkeep
 !/.helpers/collect-versions.py
+!/.helpers/notify.sh
+!/.helpers/test-all-versions.sh.j2

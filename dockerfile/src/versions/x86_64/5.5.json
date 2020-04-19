@@ -1,5 +1,6 @@
 {
     "FROM": "php:5.5-fpm",
+    "OS_TYPE": "Debian",
     "VERSION": "5.5",
     "DEBIAN_RELEASE": "jessie",
     "BUILD_SPECIFIC_PACKAGES": "libpng12-0 libpng3 libzip2 libjpeg62"

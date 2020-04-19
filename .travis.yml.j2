@@ -16,13 +16,13 @@ before_script:
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 after_failure:
-    - ./notify.sh "${SLACK_URL}" "php-app container build failure."
+    - ./.helpers/notify.sh "${SLACK_URL}" "php-app container build failure."
 
 jobs:
   include:
     {% for build in BUILDS %}
     - stage: Build {{ build.version }} at {{ build.arch }}
       script:
-            - make build VERSION={{ build.version }} ARCH={{ build.arch }} QEMU={{ build.qemu|upper }} || (./notify.sh "${SLACK_URL}" "Failed to build php-app:{{ build.version }}-{{ build.arch }}" && exit 1);
-            - make push VERSION={{ build.version }} ARCH={{ build.arch }} || (./notify.sh "${SLACK_URL}" "Failed to push php-app:{{ build.version }}-{{ build.arch }}" && exit 1);
+            - make build VERSION={{ build.version }} ARCH={{ build.arch }} QEMU={{ build.qemu|upper }} || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:{{ build.version }}-{{ build.arch }}" && exit 1);
+            - make push VERSION={{ build.version }} ARCH={{ build.arch }} || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:{{ build.version }}-{{ build.arch }}" && exit 1);
     {% endfor %}

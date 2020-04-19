@@ -12,7 +12,7 @@ export CONFIGS_DEST_PATH=${CONFIGS_DEST_PATH:-/etc}
 cp -pr /.etc.template/nginx/fastcgi-php.conf /etc/nginx/fastcgi-php.conf
 
 # render templates into $CONFIGS_DEST_PATH
-/render-jinja-files.sh
+render-jinja-files.sh
 
 echo " >> Copying all configuration files to the ${CONFIGS_DEST_PATH}"
 cp -pr ${CONFIGS_PATH}/* ${CONFIGS_DEST_PATH}/

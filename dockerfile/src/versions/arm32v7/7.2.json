@@ -1,5 +1,6 @@
 {
     "FROM": "arm32v7/php:7.2-fpm",
+    "OS_TYPE": "Debian",
     "VERSION": "7.2",
     "DEBIAN_RELEASE": "buster",
     "BUILD_SPECIFIC_PACKAGES": "libpng16-16 libzip4 libjpeg62-turbo"

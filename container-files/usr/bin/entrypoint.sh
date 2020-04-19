@@ -2,8 +2,8 @@
 
 set -e
 
-/prepare-etc.sh
-/prepare-usr.sh
+prepare-etc.sh
+prepare-usr.sh
 
 for file_name in /entrypoint.d/*sh
 do
@@ -19,4 +19,4 @@ chown www-data:www-data /var/log/cron.log
 echo " >> Running supervisord..."
 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
-exec /read-app-logs.sh
+exec read-app-logs.sh

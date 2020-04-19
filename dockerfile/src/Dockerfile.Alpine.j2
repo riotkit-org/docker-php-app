@@ -1,0 +1,43 @@
+{% extends "dockerfile/src/Dockerfile.Base.j2" %}
+
+{% block header %}
+#
+# Source NGINX image (temporary)
+#
+ARG NGINX_VERSION=1.17
+FROM nginx:$NGINX_VERSION-alpine as nginx
+{% endblock %}
+
+{% block install_python %}
+RUN apk --update add shadow python3 py3-pip
+{% endblock %}
+
+{% block nginx %}
+#
+# NGINX at specified version
+#
+RUN apk --update add busybox libcrypto1.1 libssl1.1 musl pcre zlib
+
+COPY --from=nginx /etc/logrotate.d/nginx /etc/logrotate.d/
+COPY --from=nginx /etc/nginx /etc/nginx
+COPY --from=nginx /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=nginx /usr/lib/nginx /usr/lib/
+
+RUN chmod +x /usr/sbin/nginx && nginx -v
+{% endblock %}
+
+{% block build %}
+#
+# Install packages and build PHP
+#
+ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} freetype-dev openssl-dev gnupg gcc g++ libxml2-dev libpng-dev jpeg-dev libjpeg-turbo-dev sqlite-dev libxpm-dev libzip-dev postgresql-dev"
+
+RUN set -x \
+    && apk add --update fcron supervisor \
+        git wget nano unzip libjpeg-turbo procps make mysql-client postgresql-client freetype oniguruma-dev bash libzip \
+    && apk add --virtual .deps $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
+    {% include "dockerfile/src/Extensions.j2" %}
+    && pip3 install j2cli \
+    && apk del .deps \
+    && rm -rf /var/cache/apk/* /usr/share/doc/* /etc/nginx/conf.d/*
+{% endblock %}

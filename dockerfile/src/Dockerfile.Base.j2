@@ -1,0 +1,67 @@
+{% block header %}{% endblock %}
+
+#
+# PHP image
+#
+FROM {{ FROM }}
+
+{% include "dockerfile/src/Envs.j2" %}
+
+{% block install_python %}{% endblock %}
+
+#
+# Install NGINX
+#
+{% block nginx %}{% endblock %}
+
+# Install PHP Composer (package manager)
+RUN set -x \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && mv composer.phar /usr/bin/composer \
+    && rm composer-setup.php \
+    && chmod +x /usr/bin/composer
+
+# We will operate on this user
+RUN set -x \
+    && usermod -u 1000 www-data \
+    && groupmod -g 1000 www-data
+
+#
+# Install packages and build PHP extensions
+#
+{% block build %}{% endblock %}
+
+{% block copy %}
+COPY container-files/.etc.template /.etc.template
+COPY container-files/.usr.template /.usr.template
+COPY  container-files/opt/tests /opt/tests
+COPY  container-files/usr/bin/* /usr/bin/
+{% endblock %}
+
+RUN chmod +x /usr/bin/*.sh \
+    && mkdir /entrypoint.d -p \
+    && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx \
+    && chown www-data:www-data /run/php /var/log/nginx /var/cache/nginx \
+    \
+    # SELF-TEST of example ENV values
+    \
+    && echo ">> Performing a self-test of example ENV values" \
+    && cp -pr /.etc.template /.etc.test \
+    && mkdir -p /.etc.test.dest \
+    && CONFIGS_PATH=/.etc.test CONFIGS_DEST_PATH=/.etc.test.dest prepare-etc.sh \
+    && prepare-usr.sh \
+    && rm -rf /.etc.test /.etc.test.dest \
+    \
+    && test.sh
+
+ADD container-files/entrypoint.d /entrypoint.d
+
+EXPOSE 80
+EXPOSE 9000
+EXPOSE 9001
+
+HEALTHCHECK --interval=45s --timeout=10s \
+  CMD /healthcheck.sh
+
+ENTRYPOINT /entrypoint.sh

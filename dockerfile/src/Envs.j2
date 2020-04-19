@@ -1,0 +1,88 @@
+ENV ROTATE_ENABLED=true \
+    ROTATE_HOW_OFTEN=daily \
+    ROTATE_SIZE=250k \
+    ROTATE_COUNT=3 \
+    ROTATE_MAX_AGE=5 \
+    ROTATE_MIN_SIZE=5k \
+    ROTATE_PATH="/var/www/html/var/log/*.log" \
+    # Set a custom log path
+    APP_LOG_PATH="" \
+    # Wait X seconds for the application log to appear
+    WAIT_FOR_LOG=15 \
+    CRON="" \
+    # Allows to set a more specific health check
+    HEALTHCHECK="curl -f http://localhost/ || exit 1" \
+    # Chroot directory eg. /public
+    NGINX_ROOT_DIR=public \
+    # Maximum body size eg. in POST
+    NGINX_CLIENT_MAX_BODY_SIZE=200000M \
+    NGINX_TYPES_HASH_MAX_SIZE=4096 \
+    NGINX_KEEPALIVE_TIMEOUT=65 \
+    # GZIP output. May be redundant when there is a gateway above
+    NGINX_GZIP=off \
+    # Worker processes count
+    NGINX_WORKER_PROCESSES=4 \
+    NGINX_WORKER_CONNECTIONS=1024 \
+    NGINX_SENDFILE=on \
+    NGINX_TCP_NOPUSH=on \
+    NGINX_TCP_NODELAY=on \
+    NGINX_FCGI_TEMP_WRITE_SIZE=20m \
+    NGINX_FCGI_BUSY_BUFF_SIZE=786k \
+    NGINX_FCGI_BUFF_SIZE=512k \
+    NGINX_FCGI_BUFFERS="16 512k" \
+    # Fetch the long/big request at first, then pass it to application? (recommended when container is directly accessible on the internet, not recommended when is behind a gateway which is already buffering requests)
+    NGINX_REQUEST_BUFFERING="on" \
+    # Supervisor log level
+    SUPERVISOR_LOG_LEVEL=info \
+    SUPERVISOR_LOG_BACKUPS=2 \
+    SUPERVISOR_LOG_MAXBYTES=5MB \
+    # PHP per-request memory limit
+    PHP_MEMORY_LIMIT=256M \
+    # PHP error-reporting level
+    PHP_ERROR_REPORTING="E_ALL & ~E_DEPRECATED & ~E_STRICT" \
+    PHP_DISPLAY_ERRORS=Off \
+    # Format errors in HTML format?
+    PHP_HTML_ERRORS=On \
+    # Max file size. Important for files upload. PHP_POST_MAX_SIZE needs to be also increased when this value is increased.
+    PHP_UPLOAD_MAX_FILESIZE=2M \
+    # Max POST body size
+    PHP_POST_MAX_SIZE=8M \
+    PHP_MAX_FILE_UPLOADS=20 \
+    # Maximum execution time of a single request
+    PHP_MAX_EXECUTION_TIME=30 \
+    PHP_MAX_INPUT_TIME=60 \
+    PHP_INI_DIR=/usr/local/etc/php \
+    # (internal)
+    PHP_VERSION={{ VERSION }} \
+    WWW_USER_ID=1000 \
+    WWW_GROUP_ID=1000 \
+    NGINX_ENABLE_CUSTOM_CONFIG=false \
+    NGINX_ENABLE_DEFAULT_LOCATION_INDEX=true \
+    NGINX_DEF_LOCATION_WELL_KNOWN=true \
+    NGINX_DEF_LOCATION_DOT=true \
+    NGINX_DEF_LOCATION_FAVICON=true \
+    NGINX_DEF_LOCATION_ROBOTS=true \
+    NGINX_DEF_LOCATION_HTACCESS=true \
+    NGINX_DEF_LOCATION_INDEX_PHP=true \
+    # Choose how the process manager will control the number of child processes. Options: static, dynamic, ondemand
+    FPM_PM_MODE=dynamic \
+    # The number of child processes to be created when pm is set to 'static' and the maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
+    FPM_PM_MAX_CHILDREN=8 \
+    # The number of child processes created on startup.
+    FPM_PM_START_SERVERS=3 \
+    # The desired minimum number of idle server processes.
+    FPM_PM_MIN_SPARE_SERVERS=2 \
+    # The desired maximum number of idle server processes.
+    FPM_PM_MAX_SPARE_SERVERS=5 \
+    # The number of seconds after which an idle process will be killed.
+    FPM_PM_PROCSS_IDLE_TIMEOUT=10s \
+    # The number of requests each child process should execute before respawning.
+    FPM_PM_MAX_REQUESTS=500 \
+    # The timeout for serving a single request after which the worker process will be killed.
+    FPM_REQUEST_TERMINATE_TIMEOUT=6h \
+    # Redirect worker stdout and stderr into main error log. Note: on highloaded environement, this can cause some delay in the page process time (several ms).
+    FPM_CATCH_WORKERS_OUTPUT=no \
+    # Clear environment in FPM workers
+    FPM_CLEAR_ENV=no \
+    # Limits the extensions of the main script FPM will allow to parse
+    FPM_SECURITY_LIMIT_EXTENSIONS=.php
