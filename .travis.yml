@@ -16,43 +16,43 @@ before_script:
     - echo "$QUAY_PASSWORD" | sudo docker login -u "$QUAY_USERNAME" --password-stdin quay.io
 
 after_failure:
-    - ./notify.sh "${SLACK_URL}" "php-app container build failure."
+    - ./.helpers/notify.sh "${SLACK_URL}" "php-app container build failure."
 
 jobs:
   include:
     
-    - stage: Build 7.4 at x86_64
+    - stage: Build 7.2 at arm32v7
       script:
-            - make build VERSION=7.4 ARCH=x86_64 QEMU=FALSE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.4-x86_64" && exit 1);
-            - make push VERSION=7.4 ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.4-x86_64" && exit 1);
-    
-    - stage: Build 5.4 at x86_64
-      script:
-            - make build VERSION=5.4 ARCH=x86_64 QEMU=FALSE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.4-x86_64" && exit 1);
-            - make push VERSION=5.4 ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.4-x86_64" && exit 1);
-    
-    - stage: Build 7.3 at x86_64
-      script:
-            - make build VERSION=7.3 ARCH=x86_64 QEMU=FALSE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-x86_64" && exit 1);
-            - make push VERSION=7.3 ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-x86_64" && exit 1);
-    
-    - stage: Build 7.2 at x86_64
-      script:
-            - make build VERSION=7.2 ARCH=x86_64 QEMU=FALSE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.2-x86_64" && exit 1);
-            - make push VERSION=7.2 ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.2-x86_64" && exit 1);
-    
-    - stage: Build 5.5 at x86_64
-      script:
-            - make build VERSION=5.5 ARCH=x86_64 QEMU=FALSE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:5.5-x86_64" && exit 1);
-            - make push VERSION=5.5 ARCH=x86_64 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:5.5-x86_64" && exit 1);
+            - make build VERSION=7.2 ARCH=arm32v7 QEMU=TRUE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.2-arm32v7" && exit 1);
+            - make push VERSION=7.2 ARCH=arm32v7 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.2-arm32v7" && exit 1);
     
     - stage: Build 7.3 at arm32v7
       script:
-            - make build VERSION=7.3 ARCH=arm32v7 QEMU=TRUE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-arm32v7" && exit 1);
-            - make push VERSION=7.3 ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-arm32v7" && exit 1);
+            - make build VERSION=7.3 ARCH=arm32v7 QEMU=TRUE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-arm32v7" && exit 1);
+            - make push VERSION=7.3 ARCH=arm32v7 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-arm32v7" && exit 1);
     
-    - stage: Build 7.2 at arm32v7
+    - stage: Build 7.4 at x86_64
       script:
-            - make build VERSION=7.2 ARCH=arm32v7 QEMU=TRUE || (./notify.sh "${SLACK_URL}" "Failed to build php-app:7.2-arm32v7" && exit 1);
-            - make push VERSION=7.2 ARCH=arm32v7 || (./notify.sh "${SLACK_URL}" "Failed to push php-app:7.2-arm32v7" && exit 1);
+            - make build VERSION=7.4 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.4-x86_64" && exit 1);
+            - make push VERSION=7.4 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.4-x86_64" && exit 1);
+    
+    - stage: Build 7.2 at x86_64
+      script:
+            - make build VERSION=7.2 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.2-x86_64" && exit 1);
+            - make push VERSION=7.2 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.2-x86_64" && exit 1);
+    
+    - stage: Build 5.4 at x86_64
+      script:
+            - make build VERSION=5.4 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:5.4-x86_64" && exit 1);
+            - make push VERSION=5.4 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:5.4-x86_64" && exit 1);
+    
+    - stage: Build 7.3 at x86_64
+      script:
+            - make build VERSION=7.3 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-x86_64" && exit 1);
+            - make push VERSION=7.3 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-x86_64" && exit 1);
+    
+    - stage: Build 5.5 at x86_64
+      script:
+            - make build VERSION=5.5 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:5.5-x86_64" && exit 1);
+            - make push VERSION=5.5 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:5.5-x86_64" && exit 1);
     

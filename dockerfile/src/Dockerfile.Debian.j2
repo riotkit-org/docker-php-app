@@ -32,7 +32,7 @@ RUN set -x \
     && rm /tmp/ci-utils.zip \
     && PATH="/opt/riotkit/utils/bin:$PATH" \
     {% include "dockerfile/src/Extensions.j2" %}
-    && pip install j2cli \
+    && pip install setuptools wheel j2cli \
     && apt-get remove -y $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     && apt-get autoremove -y \
     && apt-get clean \
