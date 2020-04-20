@@ -14,7 +14,7 @@ autostart=true
 user=root
 
 [program:cron]
-command=cron -f
+command={% if OS_TYPE == "Debian" %}cron -f{% else %}crond -l 2 -f{% endif %}
 startretries=6
 autorestart=true
 autostart=true

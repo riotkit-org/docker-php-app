@@ -5,6 +5,8 @@
 #
 FROM {{ FROM }}
 
+ENV OS_TYPE="{{ OS_TYPE }}"
+
 {% include "dockerfile/src/Envs.j2" %}
 
 {% block install_python %}{% endblock %}
