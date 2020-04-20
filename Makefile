@@ -1,7 +1,7 @@
 #!/usr/bin/env make
 
 RIOTKIT_UTILS_VER=v2.0.0
-SUDO=sudo
+SUDO=sudo -E
 SHELL=/bin/bash
 .SILENT:
 .PHONY: help
@@ -41,6 +41,9 @@ dev@build_all: _download_tools ## Build locally all possible versions
 	chmod +x ./.helpers/test-all-versions.sh
 	./.helpers/test-all-versions.sh
 	rm test-all-versions.sh
+
+dev@run: ## Run a compose environment for testing (VERSION, ARCH)
+	cd environment && VERSION=${VERSION} ARCH=${ARCH} ${SUDO} docker-compose -p docker_php_app up -d
 
 ### COMMON AUTOMATION
 

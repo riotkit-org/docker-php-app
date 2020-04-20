@@ -41,7 +41,7 @@ COPY  container-files/usr/bin/* /usr/bin/
 
 RUN chmod +x /usr/bin/*.sh \
     && mkdir /entrypoint.d -p \
-    && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx \
+    && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx /var/log/supervisor \
     && chown www-data:www-data /run/php /var/log/nginx /var/cache/nginx \
     \
     # SELF-TEST of example ENV values
@@ -49,6 +49,7 @@ RUN chmod +x /usr/bin/*.sh \
     && echo ">> Performing a self-test of example ENV values" \
     && cp -pr /.etc.template /.etc.test \
     && mkdir -p /.etc.test.dest \
+    && rm -f /etc/nginx/nginx.conf \
     && CONFIGS_PATH=/.etc.test CONFIGS_DEST_PATH=/.etc.test.dest prepare-etc.sh \
     && prepare-usr.sh \
     && rm -rf /.etc.test /.etc.test.dest \
@@ -64,4 +65,4 @@ EXPOSE 9001
 HEALTHCHECK --interval=45s --timeout=10s \
   CMD /healthcheck.sh
 
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT /usr/bin/entrypoint.sh
