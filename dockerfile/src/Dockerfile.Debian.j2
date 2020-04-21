@@ -42,6 +42,6 @@ RUN set -x \
 # Install required libraries (their dependencies are required - those are dynamic)
 RUN set -x \
     && apt-get update -y \
-    && apt-get install --no-install-recommends -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 graphicsmagick-imagemagick-compat python3 pythn3-pip \
+    && apt-get install --no-install-recommends -y libzip-dev libpng-dev libjpeg62-turbo libfreetype6 graphicsmagick-imagemagick-compat python3 python3-pip \
     && apt-get clean
 {% endblock %}
