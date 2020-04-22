@@ -65,6 +65,6 @@ EXPOSE 9000
 EXPOSE 9001
 
 HEALTHCHECK --interval=45s --timeout=10s \
-  CMD /healthcheck.sh
+  CMD /usr/bin/healthcheck.sh
 
 ENTRYPOINT /usr/bin/entrypoint.sh
