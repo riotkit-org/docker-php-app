@@ -1,5 +1,5 @@
 #!/bin/bash
 
-HEALTHCHECK=${HEALTHCHECK:-curl -f http://localhost/ --fail}
+HEALTHCHECK=${HEALTHCHECK:-curl --fail --insecure --location http://localhost/}
 
 exec bash -c "${HEALTHCHECK}"
