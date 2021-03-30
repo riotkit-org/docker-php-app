@@ -1,0 +1,6 @@
+{
+    "FROM": "php:8.0-fpm-alpine",
+    "OS_TYPE": "Alpine",
+    "VERSION": "8.0",
+    "BUILD_SPECIFIC_PACKAGES": "libpng libzip libjpeg-turbo"
+}

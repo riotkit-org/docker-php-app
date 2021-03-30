@@ -43,7 +43,7 @@ COPY  container-files/usr/bin/* /usr/bin/
 
 RUN chmod +x /usr/bin/*.sh \
     && mkdir /entrypoint.d -p \
-    && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx /var/log/supervisor \
+    && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx \
     && chown www-data:www-data /run/php /var/log/nginx /var/cache/nginx \
     \
     # SELF-TEST of example ENV values

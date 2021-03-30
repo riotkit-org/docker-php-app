@@ -1,7 +1,7 @@
 #!/usr/bin/env make
 
 RIOTKIT_UTILS_VER=v2.0.0
-SUDO=sudo -E
+SUDO=
 SHELL=/bin/bash
 .SILENT:
 .PHONY: help
