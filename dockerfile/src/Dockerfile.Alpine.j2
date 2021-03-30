@@ -34,7 +34,7 @@ ARG TEMPORARY_PACKAGES_FOR_BUILD_TIME="{{ BUILD_SPECIFIC_PACKAGES }} freetype-de
 
 RUN set -x \
     && apk add --update multirun \
-        git wget nano unzip libjpeg-turbo procps make freetype oniguruma-dev bash libzip imagemagick \
+        git wget nano unzip libjpeg-turbo libpq procps make freetype oniguruma-dev bash libzip imagemagick \
     && apk add --virtual .deps $TEMPORARY_PACKAGES_FOR_BUILD_TIME \
     {% include "dockerfile/src/Extensions.j2" %}
     && pip3 install j2cli \
