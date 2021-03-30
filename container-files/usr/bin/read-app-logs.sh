@@ -17,5 +17,4 @@ while [[ "${SECONDS_TO_WAIT}" != "0" ]]; do
 done
 
 echo ""
-exec tail -q -f "${APP_LOG_PATH}" \
-             -f /var/log/supervisor/*.log
+tail -q -f "${APP_LOG_PATH}" -f /var/log/supervisor/*.log || true
