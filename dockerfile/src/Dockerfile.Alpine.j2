@@ -39,5 +39,6 @@ RUN set -x \
     {% include "dockerfile/src/Extensions.j2" %}
     && pip3 install j2cli \
     && apk del .deps \
-    && rm -rf /var/cache/apk/* /usr/share/doc/* /etc/nginx/conf.d/*
+    && rm -rf /var/cache/apk/* /usr/share/doc/* /etc/nginx/conf.d/* \
+    && chmod +x /usr/bin/multirun
 {% endblock %}
