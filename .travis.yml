@@ -30,7 +30,12 @@ jobs:
 #      script:
 #            - make build VERSION=7.3 ARCH=arm32v7 QEMU=TRUE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-arm32v7" && exit 1);
 #            - make push VERSION=7.3 ARCH=arm32v7 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-arm32v7" && exit 1);
-    
+
+    - stage: Build 8.0 at x86_64
+      script:
+            - make build VERSION=8.0 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:8.0-x86_64" && exit 1);
+            - make push VERSION=8.0 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:8.0-x86_64" && exit 1);
+
     - stage: Build 7.4 at x86_64
       script:
             - make build VERSION=7.4 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.4-x86_64" && exit 1);
@@ -50,11 +55,6 @@ jobs:
       script:
             - make build VERSION=7.3 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:7.3-x86_64" && exit 1);
             - make push VERSION=7.3 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:7.3-x86_64" && exit 1);
-    
-    - stage: Build 8.0 at x86_64
-      script:
-            - make build VERSION=8.0 ARCH=x86_64 QEMU=FALSE || (./.helpers/notify.sh "${SLACK_URL}" "Failed to build php-app:8.0-x86_64" && exit 1);
-            - make push VERSION=8.0 ARCH=x86_64 || (./.helpers/notify.sh "${SLACK_URL}" "Failed to push php-app:8.0-x86_64" && exit 1);
     
     - stage: Build 5.5 at x86_64
       script:
