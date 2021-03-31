@@ -1,0 +1,23 @@
+name: "Image build & push"
+on:
+    push:
+
+jobs:
+    "release":
+        runs-on: ubuntu-20.04
+        strategy:
+            matrix:
+                variant: [["8.0", "x86_64"], ["7.4", "x86_64"], ["7.2", "x86_64"], ["5.5", "x86_64"], ["5.4", "x86_64"]]
+        steps:
+            - name: "Checkout"
+              uses: actions/checkout@v1
+
+            - name: "Login to quay"
+              uses: docker/login-action@v1
+              with:
+                  registry: quay.io
+                  username: ${{ secrets.QUAY_USERNAME }}
+                  password: ${{ secrets.QUAY_PASSWORD }}
+
+            - name: "Build"
+              run: "make build ARCH=${{ matrix.variant[1] }} VERSION=${{ matrix.variant[0] }}"
