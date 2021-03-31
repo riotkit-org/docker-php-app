@@ -27,10 +27,7 @@ build: ## Build a specific version (params: VERSION=7.3 ARCH=x86_64)
 
 push: ## Push to a repository (params: VERSION=7.3 ARCH=x86_64)
 	echo " >> Pushing ${VERSION} for ${ARCH}"
-	${SUDO} docker push wolnosciowiec/docker-php-app:${VERSION}-${ARCH}
 	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}
-
-	${SUDO} docker push wolnosciowiec/docker-php-app:${VERSION}-${ARCH}-$$(date '+%Y-%m-%d')
 	${SUDO} docker push quay.io/riotkit/php-app:${VERSION}-${ARCH}-$$(date '+%Y-%m-%d')
 
 	./.helpers/notify.sh "${SLACK_URL}" "Released php-app:${VERSION}-${ARCH} to the docker registry"
