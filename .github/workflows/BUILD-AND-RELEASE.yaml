@@ -6,6 +6,7 @@ jobs:
     "release":
         runs-on: ubuntu-20.04
         strategy:
+            max-parallel: 2
             matrix:
                 variant: [["8.0", "x86_64"], ["7.4", "x86_64"], ["7.2", "x86_64"], ["5.5", "x86_64"], ["5.4", "x86_64"]]
         steps:
