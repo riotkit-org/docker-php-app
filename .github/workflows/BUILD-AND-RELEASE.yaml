@@ -12,6 +12,9 @@ jobs:
             - name: "Checkout"
               uses: actions/checkout@v1
 
+            - name: "Setup dependencies"
+              run: "sudo pip install j2cli"
+
             - name: "Login to quay"
               uses: docker/login-action@v1
               with:
