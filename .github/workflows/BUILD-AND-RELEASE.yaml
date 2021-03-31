@@ -21,3 +21,6 @@ jobs:
 
             - name: "Build"
               run: "make build ARCH=${{ matrix.variant[1] }} VERSION=${{ matrix.variant[0] }}"
+
+            - name: "Build"
+              run: "make push ARCH=${{ matrix.variant[1] }} VERSION=${{ matrix.variant[0] }}"
