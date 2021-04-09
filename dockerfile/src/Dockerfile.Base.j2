@@ -45,6 +45,8 @@ RUN chmod +x /usr/bin/*.sh \
     && mkdir /entrypoint.d -p \
     && mkdir -p /run/php/ /var/log/nginx /var/cache/nginx \
     && chown www-data:www-data /run/php /var/log/nginx /var/cache/nginx \
+    && touch /var/log/nginx/error.log /var/log/nginx/access.log \
+    && chown -R www-data:www-data /var/log/nginx/ \
     \
     # SELF-TEST of example ENV values
     \
@@ -67,4 +69,5 @@ EXPOSE 9001
 HEALTHCHECK --interval=45s --timeout=10s \
   CMD /usr/bin/healthcheck.sh
 
-ENTRYPOINT /usr/bin/entrypoint.sh
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["multirun", "-v", "nginx", "php-fpm -F -O", "read-app-logs.sh", "crond -l 2 -f", "tail -f /var/log/nginx/error.log", "tail -f /var/log/nginx/access.log"]

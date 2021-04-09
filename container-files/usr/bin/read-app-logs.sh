@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $APP_LOG_ENABLED != "true" ]]; then
+    echo ">> Application log tailing disabled"
+    exit 0
+fi
+
 LOG_FILE_NAME=${APP_ENV:-prod}
 APP_LOG_PATH=${APP_LOG_PATH:-"/var/www/html/var/log/${LOG_FILE_NAME}.log"}
 SECONDS_TO_WAIT=${WAIT_FOR_LOG:-120}
