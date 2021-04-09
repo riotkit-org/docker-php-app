@@ -2,7 +2,7 @@
 
 if [[ $APP_LOG_ENABLED != "true" ]]; then
     echo ">> Application log tailing disabled"
-    exit 0
+    sleep 999999
 fi
 
 LOG_FILE_NAME=${APP_ENV:-prod}

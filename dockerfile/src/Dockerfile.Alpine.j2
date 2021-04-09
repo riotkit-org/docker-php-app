@@ -23,6 +23,7 @@ COPY --from=nginx /etc/nginx /etc/nginx
 COPY --from=nginx /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=nginx /usr/lib/nginx /usr/lib/
 
+RUN addgroup nginx --gid 1005 && adduser --disabled-password --gecos "" --no-create-home --ingroup "nginx" --uid "1005" nginx
 RUN chmod +x /usr/sbin/nginx && nginx -v
 {% endblock %}
 

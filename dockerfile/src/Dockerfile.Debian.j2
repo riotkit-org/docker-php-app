@@ -11,6 +11,8 @@ RUN set -x \
     && apt-get install -y --force-yes nginx \
     && apt-get clean \
     && rm -rf /etc/nginx/conf.d/*
+
+RUN useradd -s /bin/false nginx
 {% endblock %}
 
 {% block build %}
