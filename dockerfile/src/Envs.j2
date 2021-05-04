@@ -16,7 +16,10 @@ ENV ROTATE_ENABLED=true \
     # Chroot directory eg. /public
     NGINX_ROOT_DIR=public \
     # Maximum body size eg. in POST
-    NGINX_CLIENT_MAX_BODY_SIZE=200000M \
+    NGINX_CLIENT_MAX_BODY_SIZE="2000M" \
+    NGINX_CLIENT_BODY_TIMEOUT="60s"\
+    NGINX_FASTCGI_READ_TIMEOUT="120s"\
+    NGINX_FASTCGI_SEND_TIMEOUT="120s"\
     NGINX_TYPES_HASH_MAX_SIZE=4096 \
     NGINX_KEEPALIVE_TIMEOUT=65 \
     # GZIP output. May be redundant when there is a gateway above
@@ -45,7 +48,7 @@ ENV ROTATE_ENABLED=true \
     # Format errors in HTML format?
     PHP_HTML_ERRORS=On \
     # Max file size. Important for files upload. PHP_POST_MAX_SIZE needs to be also increased when this value is increased.
-    PHP_UPLOAD_MAX_FILESIZE=2M \
+    PHP_UPLOAD_MAX_FILESIZE=8M \
     # Max POST body size
     PHP_POST_MAX_SIZE=8M \
     PHP_MAX_FILE_UPLOADS=20 \

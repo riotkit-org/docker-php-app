@@ -49,6 +49,11 @@ http {
         index index.html index.php;
         server_name _;
 
+        client_header_timeout {{ NGINX_CLIENT_HEADER_TIMEOUT | default('30s') }};
+        client_body_timeout {{ NGINX_CLIENT_BODY_TIMEOUT | default('60s') }};
+        fastcgi_read_timeout {{ NGINX_FASTCGI_READ_TIMEOUT | default('120s') }};
+        fastcgi_send_timeout {{ NGINX_FASTCGI_SEND_TIMEOUT | default('120s') }};
+
         {% if NGINX_ENABLE_DEFAULT_LOCATION_INDEX == 'true' %}
         location / {
             try_files $uri /index.php$is_args$args;
